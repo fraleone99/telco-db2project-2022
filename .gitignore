@@ -12,7 +12,7 @@
 target/
 *.iml
 
-.out/
+/out/
 
 # MacOS files
 *.DS_Store
