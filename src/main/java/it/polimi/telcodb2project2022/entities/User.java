@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "telco")
@@ -27,6 +28,11 @@ public class User implements Serializable {
     @JoinTable(name = "buy", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "packageId"))
     private Collection<ServicePackage> servicePackages;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders;
+
+    @ManyToOne
+    private AuditingTable auditingTable;
 
     public String getUsername() {
         return username;

@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "associatedto", schema = "telco")
 public class AssociatedTo implements Serializable {
     private static final long serialVersionUID = 1L;
 

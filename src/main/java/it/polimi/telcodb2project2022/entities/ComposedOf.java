@@ -1,21 +1,23 @@
 package it.polimi.telcodb2project2022.entities;
 
 import it.polimi.telcodb2project2022.entities.ids.AssociatedKey;
+import it.polimi.telcodb2project2022.entities.ids.ComposedKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "composedof", schema = "telco")
 public class ComposedOf implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @EmbeddedId
-    private AssociatedKey id;
+    private ComposedKey id;
 
     @ManyToOne
     @MapsId("serviceId")
     @JoinColumn(name = "serviceId")
-    private OptionalProduct optionalProduct;
+    private Service service;
 
     @ManyToOne
     @MapsId("packageId")

@@ -1,17 +1,18 @@
 package it.polimi.telcodb2project2022.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
 @Entity
+@Table(name = "employee", schema = "telco")
 public class Employee implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     private String username;
+
+    private String password;
 
     @OneToMany(mappedBy = "employee")
     private Set<ServicePackage> createdServicePackages;

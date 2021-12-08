@@ -5,11 +5,16 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
+@Table(name = "optionalproduct", schema = "telco")
 public class OptionalProduct implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     private int id;
+
+    private String name;
+
+    private float monFee;
 
     @ManyToMany(mappedBy = "optionalProducts")
     private Collection<ServicePackage> servicePackages;
