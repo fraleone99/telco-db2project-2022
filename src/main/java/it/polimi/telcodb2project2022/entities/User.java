@@ -1,6 +1,5 @@
 package it.polimi.telcodb2project2022.entities;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -25,6 +24,7 @@ public class User implements Serializable {
     private boolean isInsolvent;
 
     @ManyToMany
+    @JoinTable(name = "buy", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "packageId"))
     private Collection<ServicePackage> servicePackages;
 
 
