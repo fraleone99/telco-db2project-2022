@@ -31,8 +31,8 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;
 
-    @ManyToOne
-    private AuditingTable auditingTable;
+    //@ManyToOne
+    //private AuditingTable auditingTable;
 
     public String getUsername() {
         return username;
@@ -52,5 +52,21 @@ public class User implements Serializable {
 
     public Collection<ServicePackage> getServicePackages() {
         return servicePackages;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setInsolvent(boolean insolvent) {
+        isInsolvent = insolvent;
     }
 }

@@ -28,6 +28,6 @@ public class Order {
     @JoinColumn(name = "idBuyer", referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
-    @ManyToOne
-    private ServiceActivationSchedule serviceActivationSchedule;
+    //@ManyToOne
+    //private ServiceActivationSchedule serviceActivationSchedule;
 }

@@ -1,5 +1,6 @@
 package it.polimi.telcodb2project2022.servlets;
 
+import it.polimi.telcodb2project2022.entities.User;
 import it.polimi.telcodb2project2022.exceptions.CredentialsException;
 import it.polimi.telcodb2project2022.services.UserService;
 import org.apache.commons.text.StringEscapeUtils;
@@ -9,6 +10,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
+import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,9 +44,11 @@ public class SignUp extends HttpServlet {
             throws ServletException, IOException {
         String usrn = null;
         String pwd = null;
+        String email = null;
         try {
             usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
             pwd = StringEscapeUtils.escapeJava(request.getParameter("pwd"));
+            email = StringEscapeUtils.escapeJava(request.getParameter("email"));
             if (usrn == null || pwd == null || usrn.isEmpty() || pwd.isEmpty()) {
                 throw new Exception("Missing or empty credential value");
             }
@@ -53,30 +58,24 @@ public class SignUp extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
             return;
         }
-        String username = null;
+
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         try {
-            // query db to authenticate for user
-            username = usrService.checkCredentials(usrn, pwd);
-        } catch (CredentialsException e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not check credentials");
-            return;
-        }
-
-        // If the user exists, add info to the session and go to home page, otherwise
-        // show login page with error message
-
-        String path;
-        if (username == null) {
-            ServletContext servletContext = getServletContext();
-            final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-            ctx.setVariable("errorMsg", "Incorrect username or password");
-            path = "/index.html";
-            templateEngine.process(path, ctx, response.getWriter());
-        } else {
-            request.getSession().setAttribute("userId", username);
-            path = getServletContext().getContextPath() + "/HomePage.html";
+            User user = usrService.insertUser(usrn, email, pwd,false);
+            request.getSession().setAttribute("user", usrn);
+            String path = getServletContext().getContextPath() + "/HomePage.html";
             response.sendRedirect(path);
+        }
+        catch (PersistenceException | IllegalArgumentException | EJBException e) {
+            if (e.getCause().getCause().getMessage().contains("Duplicate entry")) {
+                ctx.setVariable("errorMsg", "Username already taken");
+                String path = "/registration.html";
+                templateEngine.process(path, ctx, response.getWriter());
+            }
+            else {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "internal server error");
+            }
         }
 
     }

@@ -19,8 +19,8 @@ public class UserService {
     public UserService(){
     }
 
-    public String checkCredentials(String usrn, String pwd) throws CredentialsException, NonUniqueResultException {
-        List<User> uList = null;
+    public User checkCredentials(String usrn, String pwd) throws CredentialsException, NonUniqueResultException {
+        List<User> uList;
         try {
             uList = em.createNamedQuery("User.checkCredentials", User.class).setParameter(1, usrn)
                     .setParameter(2, pwd).getResultList();
@@ -30,11 +30,21 @@ public class UserService {
         if (uList.isEmpty())
             return null;
         else if (uList.size() == 1) {
-            User found = uList.get(0);
-            return found.getUsername();
+            return uList.get(0);
         }
         throw new NonUniqueResultException("More than one user registered with same credentials");
 
+    }
+
+    public User insertUser(String username, String email, String password, boolean isInsolvent) throws PersistenceException, IllegalArgumentException{
+        User user = new User();
+        user.setInsolvent(isInsolvent);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setUsername(username);
+
+        em.persist(user);
+        return user;
     }
 
 }
