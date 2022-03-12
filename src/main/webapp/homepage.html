@@ -6,8 +6,10 @@
 </head>
 <body>
 <h1>HOME PAGE</h1>
-<div><p
-        th:text="${user.username}">pippo</p>
+<div>Welcome <p
+        th:text="${user} ? *{user.username} : 'anonymous'" >
+
+</p>
 </div>
 
 </body>

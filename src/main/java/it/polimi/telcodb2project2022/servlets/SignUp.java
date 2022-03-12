@@ -63,8 +63,7 @@ public class SignUp extends HttpServlet {
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         try {
             User user = usrService.insertUser(usrn, email, pwd,false);
-            request.getSession().setAttribute("user", usrn);
-            String path = getServletContext().getContextPath() + "/homepage.html";
+            String path = getServletContext().getContextPath() + "/index.html";
             response.sendRedirect(path);
         }
         catch (PersistenceException | IllegalArgumentException | EJBException e) {

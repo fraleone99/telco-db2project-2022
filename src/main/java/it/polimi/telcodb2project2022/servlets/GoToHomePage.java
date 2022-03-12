@@ -40,16 +40,15 @@ public class GoToHomePage extends HttpServlet{
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        User u;
+        User u = null;
         String path = "/homepage.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        String username = (String) request.getSession().getAttribute("username");
-        u = uService.findById(username);
-        if (u != null)
-            ctx.setVariable("user", u);
+        String username = (String) request.getSession().getAttribute("userId");
+        if(username != null)
+            u = uService.findById(username);
+        ctx.setVariable("user", u);
         templateEngine.process(path, ctx, response.getWriter());
-
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
