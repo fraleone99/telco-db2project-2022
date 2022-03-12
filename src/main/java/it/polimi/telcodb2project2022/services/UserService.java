@@ -47,4 +47,8 @@ public class UserService {
         return user;
     }
 
+    public User findById(String username) {
+        return (em.find(User.class, username));
+    }
+
 }

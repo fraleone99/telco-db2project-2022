@@ -15,6 +15,9 @@ public class User implements Serializable {
     @Id
     private String username;
 
+    @GeneratedValue
+    private int id;
+
     @NotNull
     private String email;
 

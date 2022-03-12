@@ -1,5 +1,6 @@
 package it.polimi.telcodb2project2022.servlets;
 
+import it.polimi.telcodb2project2022.entities.User;
 import it.polimi.telcodb2project2022.exceptions.CredentialsException;
 import it.polimi.telcodb2project2022.services.UserService;
 import org.apache.commons.text.StringEscapeUtils;
@@ -53,10 +54,10 @@ public class CheckLogin extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
             return;
         }
-        String username = null;
+        User user;
         try {
             // query db to authenticate for user
-            username = usrService.checkCredentials(usrn, pwd).getUsername();
+            user = usrService.checkCredentials(usrn, pwd);
         } catch (CredentialsException e) {
             // for debugging only e.printStackTrace();
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not check credentials");
@@ -67,15 +68,15 @@ public class CheckLogin extends HttpServlet {
         // show login page with error message
 
         String path;
-        if (username == null) {
+        if (user == null) {
             ServletContext servletContext = getServletContext();
             final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
             ctx.setVariable("errorMsg", "Incorrect username or password");
             path = "/index.html";
             templateEngine.process(path, ctx, response.getWriter());
         } else {
-            request.getSession().setAttribute("userId", username);
-            path = getServletContext().getContextPath() + "/HomePage.html";
+            request.getSession().setAttribute("userId", user.getUsername());
+            path = getServletContext().getContextPath() + "/homepage.html";
             response.sendRedirect(path);
         }
 
