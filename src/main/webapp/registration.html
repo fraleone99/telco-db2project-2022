@@ -15,5 +15,13 @@
     <input type="submit" value="register">
     <p th:text=" ${errorMsg}"></p>
 </form>
+
+<form action="SignUpEmployee" method="POST">
+    Username: <input type="text" name="username" required> <br>
+    Password: <input type="password" name="pwd" required><br>
+    <input type="submit" value="register">
+    <p th:text=" ${errorMsg}"></p>
+</form>
+
 </body>
 </html>

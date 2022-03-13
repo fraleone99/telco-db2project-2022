@@ -19,4 +19,12 @@ public class Employee implements Serializable {
 
     @OneToMany(mappedBy = "employee")
     private Set<OptionalProduct> optionalProducts;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

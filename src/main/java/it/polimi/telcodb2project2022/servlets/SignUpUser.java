@@ -21,13 +21,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/SignUp")
-public class SignUp extends HttpServlet {
+public class SignUpUser extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
     @EJB(name = "it.polimi.telcodb2project2022.services/UserService")
     private UserService usrService;
 
-    public SignUp() {
+    public SignUpUser() {
         super();
     }
 
@@ -38,6 +38,14 @@ public class SignUp extends HttpServlet {
         this.templateEngine = new TemplateEngine();
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String path = "/registration.html";
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        templateEngine.process(path, ctx, response.getWriter());
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
