@@ -6,9 +6,14 @@
 </head>
 <body>
 <h1>HOME PAGE</h1>
-<div><p
-        th:text="${user.username}">pippo</p>
+<div>Welcome <a th:text="${user} ? *{user.username} : 'anonymous'" >
+</a>
 </div>
+
+<td>
+    <span th:if="${user == null}"> <a href="registration.html">Create a new account</a> <br>
+                                    <a href="index.html">Login</a> </span>
+</td>
 
 </body>
 </html>

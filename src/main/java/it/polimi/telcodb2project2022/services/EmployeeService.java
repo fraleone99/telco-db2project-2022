@@ -17,12 +17,11 @@ public class EmployeeService {
     }
 
     public Employee insertEmployee(String username, String password) throws PersistenceException, IllegalArgumentException{
-        User user = new User();
         Employee employee = new Employee();
         employee.setPassword(password);
         employee.setUsername(username);
 
-        em.persist(user);
+        em.persist(employee);
         return employee;
     }
 

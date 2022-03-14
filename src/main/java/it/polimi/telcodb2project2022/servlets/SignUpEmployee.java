@@ -47,6 +47,8 @@ public class SignUpEmployee extends HttpServlet {
         String path = "/registration.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        ctx.setVariable("isUser", "false");
+        ctx.setVariable("isEmployee", "true");
         templateEngine.process(path, ctx, response.getWriter());
     }
 
