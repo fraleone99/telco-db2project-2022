@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Login</title>
+</head>
+<body>
+<form action="EmployeeLogin" method="POST">
+    Username: <input type="text" name="username" required> <br>
+    Password: <input type="password" name="pwd" required><br>
+    <input type="submit" value="login">
+    <p th:text=" ${errorMsg}"></p>
+</form>
+</body>
+</html>

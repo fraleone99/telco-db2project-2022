@@ -6,6 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "employee", schema = "telco")
+@NamedQuery(name = "Employee.checkCredentials", query = "SELECT r FROM Employee r  WHERE r.username = ?1 and r.password = ?2")
 public class Employee implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -26,5 +27,9 @@ public class Employee implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
