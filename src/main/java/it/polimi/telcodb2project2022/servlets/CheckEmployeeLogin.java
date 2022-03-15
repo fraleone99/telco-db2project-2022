@@ -85,8 +85,8 @@ public class CheckEmployeeLogin extends HttpServlet {
             path = "/employeeLogin.html";
             templateEngine.process(path, ctx, response.getWriter());
         } else {
-            request.getSession().setAttribute("userId", employee.getUsername());
-            path = getServletContext().getContextPath() + "/GoToHomePage";
+            request.getSession().setAttribute("employeeId", employee.getUsername());
+            path = getServletContext().getContextPath() + "/GoToEmployeeHomePage";
             response.sendRedirect(path);
         }
 

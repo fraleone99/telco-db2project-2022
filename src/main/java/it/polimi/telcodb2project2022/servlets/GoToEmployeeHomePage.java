@@ -1,7 +1,9 @@
 package it.polimi.telcodb2project2022.servlets;
 
+import it.polimi.telcodb2project2022.entities.Employee;
 import it.polimi.telcodb2project2022.entities.User;
 import it.polimi.telcodb2project2022.exceptions.CredentialsException;
+import it.polimi.telcodb2project2022.services.EmployeeService;
 import it.polimi.telcodb2project2022.services.UserService;
 import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
@@ -18,14 +20,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/GoToHomePage")
-public class GoToHomePage extends HttpServlet{
+@WebServlet("/GoToEmployeeHomePage")
+public class GoToEmployeeHomePage extends HttpServlet{
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
-    @EJB(name = "it.polimi.telcodb2project2022.services/UserService")
-    private UserService uService;
+    @EJB(name = "it.polimi.telcodb2project2022.services/EmployeeService")
+    private EmployeeService eService;
 
-    public GoToHomePage() {
+    public GoToEmployeeHomePage() {
         super();
     }
 
@@ -40,14 +42,14 @@ public class GoToHomePage extends HttpServlet{
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        User u = null;
-        String path = "/userHomepage.html";
+        Employee e = null;
+        String path = "/employeeHomepage.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        String username = (String) request.getSession().getAttribute("userId");
+        String username = (String) request.getSession().getAttribute("employeeId");
         if(username != null)
-            u = uService.findById(username);
-        ctx.setVariable("user", u);
+            e = eService.findById(username);
+        ctx.setVariable("employee", e);
         templateEngine.process(path, ctx, response.getWriter());
     }
 
@@ -58,4 +60,3 @@ public class GoToHomePage extends HttpServlet{
 
 
 }
-

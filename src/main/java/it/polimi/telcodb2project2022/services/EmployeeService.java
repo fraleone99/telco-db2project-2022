@@ -45,4 +45,8 @@ public class EmployeeService {
         return employee;
     }
 
+    public Employee findById(String username) {
+        return (em.find(Employee.class, username));
+    }
+
 }
