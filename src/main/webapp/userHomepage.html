@@ -6,10 +6,19 @@
 </head>
 <body>
 <h1>HOME PAGE</h1>
-<div>Welcome <a th:text="${user} ? *{user.username} : 'anonymous'" >
-</a>
+<div>
+    <span style="float:right">Welcome <a th:text="${user} ? *{user.username} : 'anonymous'" ></a> </span>
 </div>
+<div th:if="${packages}">
+    <h3>Available packages</h3>
+    <ul>
+        <li th:each="s:${packages}">
+		<span
+                th:text="${'Name: ' + s.getName()  + ', prize: ' + s.getMonthlyFee() + ', validity period: ' + s.getValidityPeriod() }"></span>
 
+        </li>
+    </ul>
+</div>
 <td>
     <span th:if="${user == null}"> <a href="registration.html">Create a new account</a> <br>
                                     <a href="index.html">Login</a> </span>

@@ -1,7 +1,9 @@
 package it.polimi.telcodb2project2022.servlets;
 
+import it.polimi.telcodb2project2022.entities.ServicePackage;
 import it.polimi.telcodb2project2022.entities.User;
 import it.polimi.telcodb2project2022.exceptions.CredentialsException;
+import it.polimi.telcodb2project2022.services.ServicePackageService;
 import it.polimi.telcodb2project2022.services.UserService;
 import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/GoToHomePage")
 public class GoToHomePage extends HttpServlet{
@@ -24,6 +27,8 @@ public class GoToHomePage extends HttpServlet{
     private TemplateEngine templateEngine;
     @EJB(name = "it.polimi.telcodb2project2022.services/UserService")
     private UserService uService;
+    @EJB(name = "it.polimi.telcodb2project2022.services/ServicePackageService")
+    private ServicePackageService spService;
 
     public GoToHomePage() {
         super();
@@ -41,6 +46,8 @@ public class GoToHomePage extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         User u = null;
+        List<ServicePackage> packages  = null;
+
         String path = "/userHomepage.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
@@ -48,6 +55,8 @@ public class GoToHomePage extends HttpServlet{
         if(username != null)
             u = uService.findById(username);
         ctx.setVariable("user", u);
+        packages = spService.getAllServicePackages();
+        ctx.setVariable("packages", packages);
         templateEngine.process(path, ctx, response.getWriter());
     }
 

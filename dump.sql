@@ -51,7 +51,7 @@ DROP TABLE IF EXISTS `servicePackage`;
 CREATE TABLE `servicePackage` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
-  `validityPeriod` ENUM('12','24','36'),
+  `validityPeriod` int NOT NULL,
   `monthlyFee` float NOT NULL,
   `soldNumber` int NOT NULL,
   `usernameEmployee` varchar(255) NOT NULL,
