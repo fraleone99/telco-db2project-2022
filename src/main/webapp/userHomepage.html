@@ -19,6 +19,34 @@
         </li>
     </ul>
 </div>
+<div class="formdiv">
+    <p>Choose a Package to display</p>
+    <form action="#" th:action="@{/GoToHomePage}" method="GET">
+        <fieldset>
+            <p>
+                <label for="packageId">Choose a package:</label>
+                <select  name="packageId" id="packageId">
+                    <option th:each="s : ${packages}" th:value="${s.id}"
+                            th:text="${s.name}"></option>
+                </select>
+            </p>
+            <input type="submit" name="Display course" value="Display">
+        </fieldset>
+    </form>
+</div>
+<div>
+    <span th:if = "${packageSelected != null}">
+        <p
+                th:text="${'Icluded services of ' + packageSelected.name}"></p>
+    <ul>
+        <li th:each="serv:${services}">
+		<span
+                th:text="${'Type: ' + serv.getType()  + ', sms number: ' + serv.getSmsNumber() +
+                ', sms fee: ' + serv.getSmsFee() }"></span>
+
+        </li>
+    </ul></span>
+</div>
 <div>
     <span th:if="${user == null}"> <a href="registration.html">Create a new account</a> <br>
                                     <a href="index.html">Login</a> </span>

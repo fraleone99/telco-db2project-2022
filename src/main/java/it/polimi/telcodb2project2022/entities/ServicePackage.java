@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,7 +38,7 @@ public class ServicePackage implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "composedof", joinColumns = @JoinColumn(name = "packageId"), inverseJoinColumns = @JoinColumn(name = "serviceId"))
-    private Collection<Service> services;
+    private List<Service> services;
 
     @OneToMany(mappedBy = "servicePackage")
     private Set<Order> orders;
@@ -52,5 +53,13 @@ public class ServicePackage implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public List<Service> getServices() {
+        return services;
+    }
+
+    public int getId() {
+        return id;
     }
 }

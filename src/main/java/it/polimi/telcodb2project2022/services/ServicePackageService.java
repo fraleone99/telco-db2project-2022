@@ -19,4 +19,8 @@ public class ServicePackageService {
         servicePackages = em.createNamedQuery("ServicePackage.findAll", ServicePackage.class).getResultList();
         return servicePackages;
     }
+
+    public ServicePackage findById(int id) {
+        return em.find(ServicePackage.class, id);
+    }
 }
