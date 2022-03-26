@@ -1,9 +1,11 @@
 package it.polimi.telcodb2project2022.servlets;
 
+import it.polimi.telcodb2project2022.entities.OptionalProduct;
 import it.polimi.telcodb2project2022.entities.Service;
 import it.polimi.telcodb2project2022.entities.ServicePackage;
 import it.polimi.telcodb2project2022.entities.User;
 import it.polimi.telcodb2project2022.exceptions.CredentialsException;
+import it.polimi.telcodb2project2022.services.OptionalProductService;
 import it.polimi.telcodb2project2022.services.ServService;
 import it.polimi.telcodb2project2022.services.ServicePackageService;
 import it.polimi.telcodb2project2022.services.UserService;
@@ -28,12 +30,19 @@ import java.util.List;
 public class GoToHomePage extends HttpServlet{
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
+
     @EJB(name = "it.polimi.telcodb2project2022.services/UserService")
     private UserService uService;
+
     @EJB(name = "it.polimi.telcodb2project2022.services/ServicePackageService")
     private ServicePackageService spService;
+
     @EJB(name = "it.polimi.telcodb2project2022.services/ServService")
     private ServService servService;
+
+    @EJB(name = "it.polimi.telcodb2project2022.services/OptionalProductServices")
+    private OptionalProductService optionalProductService;
+
 
     public GoToHomePage() {
         super();
@@ -54,6 +63,7 @@ public class GoToHomePage extends HttpServlet{
         List<ServicePackage> packages  = null;
         List<Service> services = null;
         ServicePackage servicePackage = null;
+        List<OptionalProduct> optionalProducts = null;
 
         Integer chosen = null;
         if (request.getParameterMap().containsKey("packageId") && request.getParameter("packageId") != ""
@@ -79,6 +89,8 @@ public class GoToHomePage extends HttpServlet{
             ctx.setVariable("packageSelected", servicePackage);
             services = servService.findByPackageId(servicePackage.getId());
             ctx.setVariable("services", services);
+            optionalProducts = optionalProductService.findByPackageId(servicePackage.getId());
+            ctx.setVariable("optionalProducts" ,optionalProducts);
         }
         ctx.setVariable("user", u);
         packages = spService.getAllServicePackages();

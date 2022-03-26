@@ -14,7 +14,7 @@
     <ul>
         <li th:each="s:${packages}">
 		<span
-                th:text="${'Name: ' + s.getName()  + ', prize: ' + s.getMonthlyFee() + ', validity period: ' + s.getValidityPeriod() }"></span>
+                th:text="${'Name: ' + s.getName()}"></span>
 
         </li>
     </ul>
@@ -37,15 +37,33 @@
 <div>
     <span th:if = "${packageSelected != null}">
         <p
-                th:text="${'Icluded services of ' + packageSelected.name}"></p>
+                th:text="${
+                'The monthly fee for 12 months is: ' + packageSelected.getMonthlyFee12()
+                + ', The monthly fee for 24 months is: ' + packageSelected.getMonthlyFee24()
+                + ', The monthly fee for 36 months is: ' + packageSelected.getMonthlyFee36()}"></p>
+
+        <p
+                th:text="${'Icluded services of ' + packageSelected.name + ':'}"></p>
     <ul>
         <li th:each="serv:${services}">
-		<span
-                th:text="${'Type: ' + serv.getType()  + ', sms number: ' + serv.getSmsNumber() +
-                ', sms fee: ' + serv.getSmsFee() }"></span>
-
+            <div th:switch="${serv.getType()}">
+                <p th:case="'fixedPhone'" th:text="${'FIXED PHONE'}"></p>
+                <p th:case="'mobilePhone'" th:text="${ 'Type: ' + serv.getType()
+                    + ', minutes number: ' + serv.getMinutesNumber() + ', minutes fee: ' + serv.getMinutesFee()
+                    + ', sms number: ' + serv.getSmsNumber() + ', sms fee: ' + serv.getSmsFee() }"></p>
+                <p th:case="'fixedInternet'" th:text="${ 'Type: ' + serv.getType()  + ', GigaBytes number: ' + serv.getGigabyteNumber() + ' Gigabytes fee: ' +serv.getGigabyteFee() }"></p>
+                <p th:case="'mobileInternet'" th:text="${ 'Type: ' + serv.getType()  + ', GigaBytes number: ' + serv.getGigabyteNumber() + ' Gigabytes fee: ' +serv.getGigabyteFee() }"></p>
+            </div>
         </li>
-    </ul></span>
+    </ul>
+        <p>Optional product available: </p>
+        <ul>
+            <li th:each="optional:${optionalProducts}">
+                <p th:text="${optional.getName() + ' monthly fee:' + optional.getMonthlyFee()}"></p>
+            </li>
+        </ul>
+
+    </span>
 </div>
 <div>
     <span th:if="${user == null}"> <a href="registration.html">Create a new account</a> <br>

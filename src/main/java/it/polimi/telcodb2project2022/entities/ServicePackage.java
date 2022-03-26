@@ -1,6 +1,7 @@
 package it.polimi.telcodb2project2022.entities;
 
 import javax.persistence.*;
+import javax.swing.text.html.Option;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
@@ -21,9 +22,13 @@ public class ServicePackage implements Serializable {
     private String name;
 
     @NotNull
-    private int validityPeriod;
+    private float monthlyFee12;
 
-    private float monthlyFee;
+    @NotNull
+    private float monthlyFee24;
+
+    @NotNull
+    private float monthlyFee36;
 
     @ManyToMany(mappedBy = "servicePackages")
     private Collection<User> users;
@@ -34,7 +39,7 @@ public class ServicePackage implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "associatedto", joinColumns = @JoinColumn(name = "packageId"), inverseJoinColumns = @JoinColumn(name = "optionalId"))
-    private Collection<OptionalProduct> optionalProducts;
+    private List<OptionalProduct> optionalProducts;
 
     @ManyToMany
     @JoinTable(name = "composedof", joinColumns = @JoinColumn(name = "packageId"), inverseJoinColumns = @JoinColumn(name = "serviceId"))
@@ -43,13 +48,18 @@ public class ServicePackage implements Serializable {
     @OneToMany(mappedBy = "servicePackage")
     private Set<Order> orders;
 
-    public int getValidityPeriod() {
-        return validityPeriod;
+    public float getMonthlyFee12() {
+        return monthlyFee12;
     }
 
-    public float getMonthlyFee() {
-        return monthlyFee;
+    public float getMonthlyFee24() {
+        return monthlyFee24;
     }
+
+    public float getMonthlyFee36() {
+        return monthlyFee36;
+    }
+
 
     public String getName() {
         return name;
@@ -58,6 +68,8 @@ public class ServicePackage implements Serializable {
     public List<Service> getServices() {
         return services;
     }
+
+    public List<OptionalProduct> getOptionalProducts() {return optionalProducts; }
 
     public int getId() {
         return id;

@@ -51,8 +51,9 @@ DROP TABLE IF EXISTS `servicePackage`;
 CREATE TABLE `servicePackage` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
-  `validityPeriod` int NOT NULL,
-  `monthlyFee` float NOT NULL,
+  `monthlyFee12` float NOT NULL,
+  `monthlyFee24` float NOT NULL,
+  `monthlyFee36` float NOT NULL,
   `soldNumber` int NOT NULL,
   `usernameEmployee` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
