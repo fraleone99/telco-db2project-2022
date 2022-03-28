@@ -1,6 +1,7 @@
 package it.polimi.telcodb2project2022.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -20,6 +21,9 @@ public class Order {
 
     private boolean isValid;
 
+    @NotNull
+    private int duration;
+
     @ManyToOne
     @JoinColumn(name = "idPackage", referencedColumnName = "id", insertable = false, updatable = false)
     private ServicePackage servicePackage;
@@ -30,4 +34,6 @@ public class Order {
 
     //@ManyToOne
     //private ServiceActivationSchedule serviceActivationSchedule;
+
+
 }

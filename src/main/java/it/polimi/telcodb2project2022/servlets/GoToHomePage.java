@@ -4,12 +4,10 @@ import it.polimi.telcodb2project2022.entities.OptionalProduct;
 import it.polimi.telcodb2project2022.entities.Service;
 import it.polimi.telcodb2project2022.entities.ServicePackage;
 import it.polimi.telcodb2project2022.entities.User;
-import it.polimi.telcodb2project2022.exceptions.CredentialsException;
 import it.polimi.telcodb2project2022.services.OptionalProductService;
 import it.polimi.telcodb2project2022.services.ServService;
 import it.polimi.telcodb2project2022.services.ServicePackageService;
 import it.polimi.telcodb2project2022.services.UserService;
-import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -22,7 +20,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.plaf.IconUIResource;
 import java.io.IOException;
 import java.util.List;
 
@@ -58,7 +55,7 @@ public class GoToHomePage extends HttpServlet{
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws IOException, ServletException {
         User u = null;
         List<ServicePackage> packages  = null;
         List<Service> services = null;
