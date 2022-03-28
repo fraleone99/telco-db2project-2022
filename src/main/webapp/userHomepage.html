@@ -19,7 +19,7 @@
         </li>
     </ul>
 </div>
-<div class="formdiv">
+<div>
     <p>Choose a Package to display</p>
     <form action="#" th:action="@{/GoToHomePage}" method="GET">
         <fieldset>
@@ -66,6 +66,8 @@
     </span>
 </div>
 <div>
+    <a href="BuyService">Buy a package</a>
+</div>
     <span th:if="${user == null}"> <a href="registration.html">Create a new account</a> <br>
                                     <a href="index.html">Login</a> </span>
 </div>
