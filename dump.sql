@@ -127,6 +127,7 @@ CREATE TABLE `order` (
   `totalValue` float NOT NULL,
   `startDate` DATE NOT NULL,
   `isValid` boolean NOT NULL,
+  `duration` int NOT NULL,
   `idBuyer` int NOT NULL,
   `idPackage` int NOT NULL,
   PRIMARY KEY (`id`),
