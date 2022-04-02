@@ -18,4 +18,8 @@ public class OptionalProductService {
         ServicePackage servicePackage = em.find(ServicePackage.class, id);
         return servicePackage.getOptionalProducts();
     }
+
+    public OptionalProduct findById(int id){
+        return em.find(OptionalProduct.class, id);
+    }
 }

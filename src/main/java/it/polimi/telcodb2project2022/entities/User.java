@@ -12,6 +12,11 @@ import java.util.Set;
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @NotNull
+    @GeneratedValue
+    @Column(unique = true)
+    private int id;
+
     @Id
     private String username;
 

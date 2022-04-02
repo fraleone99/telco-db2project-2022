@@ -19,9 +19,13 @@ public class OptionalProduct implements Serializable {
     @ManyToMany(mappedBy = "optionalProducts")
     private Collection<ServicePackage> servicePackages;
 
+    @ManyToMany(mappedBy = "selectedOptional")
+    private Collection<Order> orders;
+
     @ManyToOne
     @JoinColumn(name = "usernameEmployee", referencedColumnName = "username", insertable = false, updatable = false)
     private Employee employee;
+
 
     public String getName() {
         return name;
@@ -29,5 +33,9 @@ public class OptionalProduct implements Serializable {
 
     public float getMonthlyFee() {
         return monthlyFee;
+    }
+
+    public int getId() {
+        return id;
     }
 }
