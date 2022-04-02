@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CREATE SUBSCRIPTION</title>
+</head>
+<div>
+    <span style="float:right">Welcome <a th:text="${user} ? *{user.username} : 'anonymous'" ></a> </span>
+</div>
+<h1>BUY A PACKAGE</h1>
+<body>
+<div th:if="${packagesList}">
+    <h3>Available packages</h3>
+    <ul>
+        <li th:each="k:${packagesList}">
+		<span
+                th:text="${'Name: ' + k.getName()}"></span>
+
+        </li>
+    </ul>
+</div>
+<form action="#" th:action="@{/BuyService}" method="GET">
+    <fieldset>
+        <p>
+            <label for="toBuy">Choose a package:</label>
+            <select  name="toBuy" id="toBuy">
+                <option th:each="p:${packagesList}" th:value="${p.id}"
+                        th:text="${p.getName()}"></option>
+            </select>
+        </p>
+        <input type="submit" name="Buy Service" value="Buy">
+    </fieldset>
+</form>
+
+<div th:if="${packageToBuy}">
+    <p th:text="${'The selected package is ' + packageToBuy.name}"></p>
+    <form action="#" th:action="@{/BuyService}" method="POST">
+        <p>Select the duration of the subscription:</p>
+
+        <div>
+            <input type="radio" id="12" name="duration" value="12"
+                   checked>
+            <label for="12" th:text="${packageToBuy.getMonthlyFee12() + ' euro - 12 months'}"></label>
+        </div>
+
+        <div>
+            <input type="radio" id="24" name="duration" value="24">
+            <label for="24" th:text="${packageToBuy.getMonthlyFee24() + ' euro - 24 months'}"></label>
+        </div>
+
+        <div>
+            <input type="radio" id="36" name="duration" value="36">
+            <label for="36" th:text="${packageToBuy.getMonthlyFee36() + ' euro - 36 months'}"></label>
+        </div>
+        <p>
+                <label>Choose the optional products:</label>
+            <ul>
+                <li th:each="product : ${optionalProducts}">
+                    <label th:for="${product.name}" th:text="${product.name}">Optional name</label>
+                    <label>
+                        <input type="checkbox" th:id="${product.id}"
+                               th:name="optional" th:value="${product.id}"/>
+                    </label>
+                </li>
+            </ul>
+        </p>
+
+        <p>
+            <label for="start">Start dat of subscription:</label>
+            <input type="date" id="start" name="startDate"
+                   value="2022-03-31"
+                   min="2022-03-31" max="2025-12-31">
+        </p>
+
+        <input type="submit" name="confirm" value="confirm">
+    </form>
+</div>
+
+
+
+</body>
+</html>
