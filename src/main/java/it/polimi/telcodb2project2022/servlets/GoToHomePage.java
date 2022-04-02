@@ -56,11 +56,12 @@ public class GoToHomePage extends HttpServlet{
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        User u = null;
         List<ServicePackage> packages  = null;
         List<Service> services = null;
         ServicePackage servicePackage = null;
         List<OptionalProduct> optionalProducts = null;
+
+        User u = (User) request.getSession().getAttribute("user");
 
         Integer chosen = null;
         if (request.getParameterMap().containsKey("packageId") && request.getParameter("packageId") != ""
