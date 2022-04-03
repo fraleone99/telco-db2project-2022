@@ -207,6 +207,25 @@ CREATE TABLE `associatedTo` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+--
+-- Table structure for table `associatedTo`
+--
+
+DROP TABLE IF EXISTS `optionalSelected`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `optionalSelected` (
+    `optionalId` int(11),
+    `orderId` int(11),
+    PRIMARY KEY (`optionalId`,`orderId`),
+    KEY `associatedTo_optionalId_idx` (`optionalId`),
+    KEY `associatedTo_orderId_idx` (`orderId`),
+    CONSTRAINT `optionalSelected_optionalId` FOREIGN KEY (`optionalId`) REFERENCES `optionalProduct` (`id`),
+    CONSTRAINT `optionalSelected_orderId` FOREIGN KEY (`orderId`) REFERENCES `order` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Table structure for table `composedOf`
 --

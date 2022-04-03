@@ -144,7 +144,10 @@ public class BuyService extends HttpServlet {
         }
 
         Order order = new Order(date, startSubscription, Integer.parseInt(duration), selectedOptional, servicePackage, user);
+        session.setAttribute("startSubscription", startSubscription);
+        session.setAttribute("selectedOptionals", selectedOptional);
         session.setAttribute("order", order);
+        session.setAttribute("duration", duration);
 
         String confirm = getServletContext().getContextPath() + "/ConfirmOrder";
         response.sendRedirect(confirm);

@@ -2,7 +2,9 @@ package it.polimi.telcodb2project2022.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "optionalproduct", schema = "telco")
@@ -10,20 +12,22 @@ public class OptionalProduct implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private int id;
 
     private String name;
 
     private float monthlyFee;
 
-    @ManyToMany(mappedBy = "optionalProducts")
+    @ManyToMany(cascade = CascadeType.ALL ,mappedBy = "optionalProducts")
     private Collection<ServicePackage> servicePackages;
 
     @ManyToMany(mappedBy = "selectedOptional")
-    private Collection<Order> orders;
+    private List<Order> orders = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "usernameEmployee", referencedColumnName = "username", insertable = false, updatable = false)
+    @JoinColumn(name = "usernameEmployee", referencedColumnName = "username", updatable = false)
     private Employee employee;
 
 
@@ -37,5 +41,9 @@ public class OptionalProduct implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 }

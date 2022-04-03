@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm order</title>
+</head>
+<div>
+    <span style="float:right">Welcome <a th:text="${user} ? *{user.username} : 'anonymous'" ></a> </span>
+</div>
+<body>
+    <h1>Confirm your order</h1>
+        <form action="#" th:action="@{/ConfirmOrder}" method="POST">
+            <p th:text="${'The selected package is: ' + order.servicePackage.name + ' for the duration of ' + order.duration + ' months'}"></p>
+            <p>Optional product selected: </p>
+            <ul>
+                <li th:each="optional:${order.selectedOptional}">
+                    <p th:text="${optional.name}"></p>
+                </li>
+            </ul>
+            <p th:text="${'The total price to be pre-paid is of: ' + order.totalValue + ' euro'}"></p>
+            <input type="submit" name="Buy" value="Buy">
+            <input type="submit" name="Buy" value="Buy - Payment not accepted">
+
+        </form>
+</body>
+</html>

@@ -2,6 +2,7 @@ package it.polimi.telcodb2project2022.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import java.util.List;
 public class Order {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private int id;
 
     @Temporal(TemporalType.DATE)
@@ -26,8 +29,10 @@ public class Order {
     private int duration;
 
     @ManyToMany
-    @JoinTable(name = "optionalSelected", joinColumns = @JoinColumn(name = "orderId"), inverseJoinColumns = @JoinColumn(name = "optionalId"))
-    private List<OptionalProduct> selectedOptional;
+    @JoinTable(name = "optionalSelected",
+            joinColumns = @JoinColumn(name = "orderId"),
+            inverseJoinColumns = @JoinColumn(name = "optionalId"))
+    private List<OptionalProduct> selectedOptional = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "idPackage", referencedColumnName = "id", updatable = false)
@@ -92,6 +97,11 @@ public class Order {
         return duration;
     }
 
+    public void AddOptionalProduct(OptionalProduct optionalProduct) {
+        selectedOptional.add(optionalProduct);
+        optionalProduct.getOrders().add(this);
+    }
+
     public List<OptionalProduct> getSelectedOptional() {
         return selectedOptional;
     }
@@ -124,9 +134,6 @@ public class Order {
         this.duration = duration;
     }
 
-    public void setSelectedOptional(List<OptionalProduct> selectedOptional) {
-        this.selectedOptional = selectedOptional;
-    }
 
     public void setServicePackage(ServicePackage servicePackage) {
         this.servicePackage = servicePackage;

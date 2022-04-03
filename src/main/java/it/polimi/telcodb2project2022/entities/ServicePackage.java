@@ -37,7 +37,7 @@ public class ServicePackage implements Serializable {
     @JoinColumn(name = "usernameEmployee", referencedColumnName = "username", insertable = false, updatable = false)
     private Employee employee;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "associatedto", joinColumns = @JoinColumn(name = "packageId"), inverseJoinColumns = @JoinColumn(name = "optionalId"))
     private List<OptionalProduct> optionalProducts;
 
