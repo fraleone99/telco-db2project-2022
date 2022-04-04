@@ -144,13 +144,32 @@ public class BuyService extends HttpServlet {
             e.printStackTrace();
         }
 
-        Order order = new Order(date, startSubscription, Integer.parseInt(duration), selectedOptional, servicePackage, user);
+        float totalCost = computeTotalCost(Integer.parseInt(duration),servicePackage, selectedOptional);
         session.setAttribute("startSubscription", startSubscription);
         session.setAttribute("selectedOptionals", selectedOptional);
-        session.setAttribute("order", order);
+        session.setAttribute("totalCost", totalCost);
         session.setAttribute("duration", duration);
 
         String confirm = getServletContext().getContextPath() + "/ConfirmOrder";
         response.sendRedirect(confirm);
+    }
+
+    private float computeTotalCost(int duration, ServicePackage servicePackage, List<OptionalProduct> selectedOptional){
+        float costOfOptional = 0;
+        float costOfServicePackage = 0;
+
+        if(duration == 12)
+            costOfServicePackage = servicePackage.getMonthlyFee12() * 12;
+        else if(duration == 24)
+            costOfServicePackage = servicePackage.getMonthlyFee24() * 24;
+        else
+            costOfServicePackage = servicePackage.getMonthlyFee36() * 36;
+
+        for(OptionalProduct p: selectedOptional){
+            costOfOptional += p.getMonthlyFee();
+        }
+        costOfOptional = costOfOptional*duration;
+
+        return costOfOptional + costOfServicePackage;
     }
 }

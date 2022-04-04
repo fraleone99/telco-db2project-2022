@@ -15,7 +15,7 @@ public class Order {
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dateOfOrder;
 
     private float totalValue;

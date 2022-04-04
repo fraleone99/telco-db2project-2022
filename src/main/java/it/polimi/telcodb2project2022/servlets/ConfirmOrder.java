@@ -47,9 +47,17 @@ public class ConfirmOrder extends HttpServlet {
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         User user = (User) request.getSession().getAttribute("user");
-        Order order = (Order) request.getSession().getAttribute("order");
+        int duration =  Integer.parseInt((String) request.getSession().getAttribute("duration"));
+        List<OptionalProduct> selectedOptionals = (List<OptionalProduct>) request.getSession().getAttribute("selectedOptionals");
+        float totalCost = (Float) request.getSession().getAttribute("totalCost");
+        ServicePackage servicePackage = (ServicePackage) request.getSession().getAttribute("packageSelected");
+
+
+        ctx.setVariable("duration", duration);
         ctx.setVariable("user", user);
-        ctx.setVariable("order", order);
+        ctx.setVariable("selectedOptionals", selectedOptionals);
+        ctx.setVariable("totalCost",totalCost);
+        ctx.setVariable("servicePackage", servicePackage);
         templateEngine.process(path, ctx, response.getWriter());
     }
 
@@ -59,10 +67,10 @@ public class ConfirmOrder extends HttpServlet {
 
 
         Date startSubscription = (Date) request.getSession().getAttribute("startSubscription");
-        List<OptionalProduct> selectedOptional = (List<OptionalProduct>) request.getSession().getAttribute("selectedOptionals");
+        List<OptionalProduct> selectedOptionals = (List<OptionalProduct>) request.getSession().getAttribute("selectedOptionals");
 
         List<Integer> OptionalIds = new ArrayList<>();
-        for(OptionalProduct op : selectedOptional) {
+        for(OptionalProduct op : selectedOptionals) {
             System.out.println("id to add:" + op.getId());
             OptionalIds.add(op.getId());
         }
@@ -78,7 +86,7 @@ public class ConfirmOrder extends HttpServlet {
 
         Order order;
         order =  orderService.insertOrder(duration,request.getParameter("Buy").equals("Buy"), startSubscription,
-                selectedOptional, servicePackage, user);
+                selectedOptionals, servicePackage, user);
         orderService.insertOptionals(order.getId(), OptionalIds);
 
         String confirm = getServletContext().getContextPath() + "/GoToHomePage";

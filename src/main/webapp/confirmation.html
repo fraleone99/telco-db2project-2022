@@ -10,16 +10,16 @@
 <body>
     <h1>Confirm your order</h1>
         <form action="#" th:action="@{/ConfirmOrder}" method="POST">
-            <p th:text="${'The selected package is: ' + order.servicePackage.name + ' for the duration of ' + order.duration + ' months'}"></p>
-            <span th:if = "${order.selectedOptional != null}">
+            <p th:text="${'The selected package is: ' + servicePackage.name + ' for the duration of ' + duration + ' months'}"></p>
+            <span th:if = "${selectedOptionals != null}">
                 <p>Optional product selected: </p>
                 <ul>
-                    <li th:each="optional:${order.selectedOptional}">
+                    <li th:each="optional:${selectedOptionals}">
                         <p th:text="${optional.name}"></p>
                     </li>
                 </ul>
             </span>
-            <p th:text="${'The total price to be pre-paid is of: ' + order.totalValue + ' euro'}"></p>
+            <p th:text="${'The total price to be pre-paid is of: ' + totalCost + ' euro'}"></p>
             <input type="submit" name="Buy" value="Buy">
             <input type="submit" name="Buy" value="Buy - Payment not accepted">
 

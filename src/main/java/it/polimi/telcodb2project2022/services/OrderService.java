@@ -26,8 +26,7 @@ public class OrderService {
                              List<OptionalProduct> selectedOptionals, ServicePackage servicePackage, User user){
         Order order = new Order();
 
-        Calendar cal = Calendar.getInstance();
-        Date date = cal.getTime();
+        Date date = new Date();
         order.setDateOfOrder(date);
 
         order.setValid(isValid);
