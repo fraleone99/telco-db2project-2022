@@ -1,18 +1,18 @@
 package it.polimi.telcodb2project2022.servlets;
 
-import it.polimi.telcodb2project2022.entities.*;
+import it.polimi.telcodb2project2022.entities.OptionalProduct;
+import it.polimi.telcodb2project2022.entities.Order;
+import it.polimi.telcodb2project2022.entities.ServicePackage;
+import it.polimi.telcodb2project2022.entities.User;
 import it.polimi.telcodb2project2022.services.OptionalProductService;
 import it.polimi.telcodb2project2022.services.ServicePackageService;
 import it.polimi.telcodb2project2022.services.UserService;
-import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -124,12 +123,14 @@ public class BuyService extends HttpServlet {
         for(OptionalProduct p : optionalProducts){
             System.out.println("optional: " + p.getName());
         }
-        for (String optional : optionals) {
-            System.out.println("selected : " + optional);
-            selectedOptional.add(optionalProductService.findById(Integer.parseInt(optional)));
 
+        if(optionals != null) {
+            for (String optional : optionals) {
+                System.out.println("selected : " + optional);
+                selectedOptional.add(optionalProductService.findById(Integer.parseInt(optional)));
+
+            }
         }
-
         System.out.println("Start Date: " + startDate);
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
