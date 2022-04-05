@@ -15,7 +15,7 @@ public class Employee implements Serializable {
 
     private String password;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "usernameEmployee")
     private Set<ServicePackage> createdServicePackages;
 
     @OneToMany(mappedBy = "employee")
@@ -31,6 +31,14 @@ public class Employee implements Serializable {
 
     public String getUsername() {
         return username;
+    }
+
+    public Set<ServicePackage> getCreatedServicePackages() {
+        return createdServicePackages;
+    }
+
+    public Set<OptionalProduct> getOptionalProducts() {
+        return optionalProducts;
     }
 
     public String getPassword() {

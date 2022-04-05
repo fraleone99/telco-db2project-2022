@@ -28,7 +28,7 @@ public class Order {
     @NotNull
     private int duration;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "optionalSelected",
             joinColumns = @JoinColumn(name = "orderId"),
             inverseJoinColumns = @JoinColumn(name = "optionalId"))

@@ -85,7 +85,7 @@ public class GoToHomePage extends HttpServlet{
             u = uService.findById(username);
         if(servicePackage != null) {
             ctx.setVariable("packageSelected", servicePackage);
-            services = servService.findByPackageId(servicePackage.getId());
+            //services = servService.findByPackageId(servicePackage.getId());
             ctx.setVariable("services", services);
             optionalProducts = optionalProductService.findByPackageId(servicePackage.getId());
             ctx.setVariable("optionalProducts" ,optionalProducts);

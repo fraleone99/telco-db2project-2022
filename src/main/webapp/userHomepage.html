@@ -44,7 +44,7 @@
                 + ', The monthly fee for 36 months is: ' + packageSelected.getMonthlyFee36()}"></p>
 
         <p
-                th:text="${'Icluded services of ' + packageSelected.name + ':'}"></p>
+                th:text="${'Included services of ' + packageSelected.name + ':'}"></p>
     <ul>
         <li th:each="serv:${services}">
             <div th:switch="${serv.getType()}">
@@ -63,7 +63,6 @@
                 <p th:text="${optional.getName() + ' monthly fee:' + optional.getMonthlyFee()}"></p>
             </li>
         </ul>
-
     </span>
 </div>
 <div>

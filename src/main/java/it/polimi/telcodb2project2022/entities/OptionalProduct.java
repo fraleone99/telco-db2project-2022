@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "optionalproduct", schema = "telco")
+@NamedQuery(name = "OptionalProduct.getOptionalProducts", query = "SELECT r FROM OptionalProduct r ")
 public class OptionalProduct implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -16,12 +17,13 @@ public class OptionalProduct implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
 
+    @Column(unique = true)
     private String name;
 
     private float monthlyFee;
 
-    @ManyToMany(cascade = CascadeType.ALL ,mappedBy = "optionalProducts")
-    private Collection<ServicePackage> servicePackages;
+    @ManyToMany(mappedBy = "optionalProducts")
+    private List<ServicePackage> servicePackages = new ArrayList<>();
 
     @ManyToMany(mappedBy = "selectedOptional")
     private List<Order> orders = new ArrayList<>();
@@ -45,5 +47,22 @@ public class OptionalProduct implements Serializable {
 
     public List<Order> getOrders() {
         return orders;
+    }
+
+    public List<ServicePackage> getServicePackages() {
+        return servicePackages;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMonthlyFee(float monthlyFee) {
+        this.monthlyFee = monthlyFee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+        employee.getOptionalProducts().add(this);
     }
 }

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Service Page</title>
+</head>
+<body>
+
+<div>
+    <span style="float:right"> Welcome <a th:text="*{employee.username}" ></a> </span>
+</div>
+
+<h1>CREATE SERVICE PAGE</h1>
+
+<span th:if = "${!typeSelected}">
+    <form action="#" th:action="@{/CreateService}" method="GET">
+        <fieldset>
+            <label for="serviceId">Choose a service to add:</label>
+            <select  name="serviceId" id="serviceId">
+                <span>
+                    <option th:value="'mobilePhone'"> Mobile Phone </option>
+                </span>
+                <span>
+                    <option th:value="'fixedInternet'"> Fixed Internet </option>
+                </span>
+                <span>
+                    <option th:value="'mobileInternet'"> Mobile Internet </option>
+                </span>
+            </select> <br><br>
+            <input type="submit" name="Add course" value="Add">
+        </fieldset>
+    </form>
+</span>
+
+<span th:if = "${typeSelected}">
+    <form action="#" th:action="@{/CreateService}" method="POST">
+        <span th:if = "${typeSelected == 'mobilePhone'}">
+            <fieldset>
+                Number of minutes: <input type="number" min="0" name="numMinutes" required> <br>
+                Number of SMSs: <input type="number" min="0" name="numSMSs" required><br>
+                Fee for extra minutes: <input type="number" step="0.01" min="0" name="feeMinutes" required> <br>
+                Fee for extra SMSs: <input type="number" step="0.01" min="0" name="feeSMSs" required><br><br>
+                <input type="submit" value="Add service">
+            </fieldset>
+        </span>
+
+        <span th:if = "${typeSelected == 'fixedInternet'} or ${typeSelected == 'mobileInternet'}">
+            <fieldset>
+                Number of Gigabytes: <input type="number" min="0" name="numGiga" required><br>
+                Fee for extra Gigabytes: <input type="number" step="0.01" min="0" name="feeGiga" required><br><br>
+                <input type="submit" value="Add service">
+            </fieldset>
+        </span>
+    </form>
+</span>
+
+</body>
+</html>
