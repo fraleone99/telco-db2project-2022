@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Optional Product Page</title>
+</head>
+<body>
+
+<div>
+    <span style="float:right"> Welcome <a th:text="*{employee.username}" ></a> </span>
+</div>
+
+<h1>CREATE OPTIONAL PRODUCT</h1>
+
+<form action="#" th:action="@{/CreateOptional}" method="POST">
+    <fieldset>
+        Name: <input type="text" name="optionalProductName" required> <br>
+        Monthly fee: <input type="number" step="0.01" min="0" name="optionalProductFee" required> <br> <br>
+        <input type="submit" value="Create optional product"> <br>
+        <p th:text=" ${errorMsg}"></p>
+    </fieldset>
+</form>
+
+</body>
+</html>
