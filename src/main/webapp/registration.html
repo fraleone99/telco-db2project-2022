@@ -8,22 +8,13 @@
 <h1>Insert your data</h1>
 <h2></h2>
 
-<th:block th:if="${isUser}"><form action="SignUp" method="POST">
+<th:block><form action="SignUp" method="POST">
     Username: <input type="text" name="username" required> <br>
     email : <input type="text" name="email" required> <br>
     Password: <input type="password" name="pwd" required><br>
     <input type="submit" value="register">
     <p th:text=" ${errorMsg}"></p>
 </form></th:block>
-
-
-<th:block th:if="${isEmployee}"><form action="SignUpEmployee" method="POST">
-    Username: <input type="text" name="username" required> <br>
-    Password: <input type="password" name="pwd" required><br>
-    <input type="submit" value="register">
-    <p th:text=" ${errorMsg}"></p>
-</form></th:block>
-
 
 </body>
 </html>

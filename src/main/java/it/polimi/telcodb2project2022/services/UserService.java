@@ -47,8 +47,21 @@ public class UserService {
         return user;
     }
 
+    public Boolean isNameTaken(String username) {
+        List<User> userList = em.createNamedQuery("User.findByName", User.class)
+                .setParameter(1, username)
+                .getResultList();
+
+        return !(userList == null || userList.isEmpty());
+    }
+
     public User findById(String username) {
         return (em.find(User.class, username));
+    }
+
+    public void setInsolvent(User u){
+        u.setInsolvent(true);
+        em.merge(u);
     }
 
 }

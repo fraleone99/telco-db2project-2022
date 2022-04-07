@@ -150,6 +150,8 @@ public class BuyService extends HttpServlet {
         session.setAttribute("totalCost", totalCost);
         session.setAttribute("duration", duration);
 
+        session.setAttribute("orderCreated", true);
+
         String confirm = getServletContext().getContextPath() + "/ConfirmOrder";
         response.sendRedirect(confirm);
     }

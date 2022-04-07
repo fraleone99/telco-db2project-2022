@@ -20,8 +20,15 @@
                 </ul>
             </span>
             <p th:text="${'The total price to be pre-paid is of: ' + totalCost + ' euro'}"></p>
-            <input type="submit" name="Buy" value="Buy">
-            <input type="submit" name="Buy" value="Buy - Payment not accepted">
+            <span th:if = "${user}">
+                <input type="submit" name="Buy" value="Buy">
+                <input type="submit" name="Buy" value="Buy - Payment not accepted">
+            </span>
+
+            <span th:if = "${!user}">
+                <a href="SignUp">Create a new user account</a> <br>
+                <a href="index.html">Login</a> <br>
+            </span>
 
         </form>
 </body>

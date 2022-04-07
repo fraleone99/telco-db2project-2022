@@ -71,20 +71,28 @@ public class SignUpUser extends HttpServlet {
 
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        try {
-            User user = usrService.insertUser(usrn, email, pwd,false);
-            String path = getServletContext().getContextPath() + "/index.html";
-            response.sendRedirect(path);
-        }
-        catch (PersistenceException | IllegalArgumentException | EJBException e) {
-            if (e.getCause().getCause().getMessage().contains("Duplicate entry")) {
-                ctx.setVariable("errorMsg", "Username already taken");
-                String path = "/registration.html";
-                templateEngine.process(path, ctx, response.getWriter());
-            }
-            else {
+
+        if(!usrService.isNameTaken(usrn)) {
+            try {
+                User user = usrService.insertUser(usrn, email, pwd, false);
+                String path;
+                request.getSession().setAttribute("user", user);
+                if (request.getSession().getAttribute("orderCreated") != null) {
+                    path = getServletContext().getContextPath() + "/ConfirmOrder";
+                } else {
+                    path = getServletContext().getContextPath() + "/GoToHomePage";
+                }
+                response.sendRedirect(path);
+            } catch (PersistenceException | IllegalArgumentException | EJBException e) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "internal server error");
+
             }
+        }
+        else{
+            String path = "/registration.html";
+            ctx.setVariable("errorMsg", "Username already taken");
+            templateEngine.process(path, ctx, response.getWriter());
+
         }
 
     }

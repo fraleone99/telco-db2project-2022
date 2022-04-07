@@ -1,13 +1,7 @@
 package it.polimi.telcodb2project2022.servlets;
 
-import it.polimi.telcodb2project2022.entities.OptionalProduct;
-import it.polimi.telcodb2project2022.entities.Service;
-import it.polimi.telcodb2project2022.entities.ServicePackage;
-import it.polimi.telcodb2project2022.entities.User;
-import it.polimi.telcodb2project2022.services.OptionalProductService;
-import it.polimi.telcodb2project2022.services.ServService;
-import it.polimi.telcodb2project2022.services.ServicePackageService;
-import it.polimi.telcodb2project2022.services.UserService;
+import it.polimi.telcodb2project2022.entities.*;
+import it.polimi.telcodb2project2022.services.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -40,6 +34,9 @@ public class GoToHomePage extends HttpServlet{
     @EJB(name = "it.polimi.telcodb2project2022.services/OptionalProductServices")
     private OptionalProductService optionalProductService;
 
+    @EJB(name = "it.polimi.telcodb2project2022.services/OrderServices")
+    private OrderService orderService;
+
 
     public GoToHomePage() {
         super();
@@ -62,6 +59,8 @@ public class GoToHomePage extends HttpServlet{
         List<OptionalProduct> optionalProducts = null;
 
         User u = (User) request.getSession().getAttribute("user");
+
+
 
         Integer chosen = null;
         if (request.getParameterMap().containsKey("packageId") && request.getParameter("packageId") != ""
@@ -90,15 +89,43 @@ public class GoToHomePage extends HttpServlet{
             optionalProducts = optionalProductService.findByPackageId(servicePackage.getId());
             ctx.setVariable("optionalProducts" ,optionalProducts);
         }
+
+
+
+        if (u != null) {
+            List<Order> invalidOrder = orderService.getInvalidOrderByUser(u.getUsername());
+            if(!invalidOrder.isEmpty())
+                ctx.setVariable("invalidOrder", invalidOrder);
+        }
+
+
         ctx.setVariable("user", u);
         packages = spService.getAllServicePackages();
         ctx.setVariable("packages", packages);
         templateEngine.process(path, ctx, response.getWriter());
+
+
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
+        int chosen;
+        if (request.getParameterMap().containsKey("invalidId") && request.getParameter("invalidId") != ""
+                && !request.getParameter("invalidId").isEmpty()) {
+            System.out.println("Andiamo a pagare");
+            Order order;
+            try {
+                chosen = Integer.parseInt(request.getParameter("invalidId"));
+                order = orderService.findById(chosen);
+
+            } catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid package parameters");
+                return;
+            }
+            request.getSession().setAttribute("invalidOrder", order);
+            String confirm = getServletContext().getContextPath() + "/ConfirmOrder";
+            response.sendRedirect(confirm);
+        }
     }
 
 

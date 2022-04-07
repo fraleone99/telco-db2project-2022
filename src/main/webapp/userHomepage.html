@@ -69,6 +69,25 @@
 <div>
     <a href="BuyService">Buy a package</a>
 </div>
+
+<span th:if = "${invalidOrder}">
+    <p> These are your invalid orders: </p>
+    <form action="#" th:action="@{/GoToHomePage}" method="POST">
+            <fieldset>
+                <p>
+                    <label for="invalidId">Choose an order:</label>
+                    <select  name="invalidId" id="invalidId">
+                        <option th:each="order : ${invalidOrder}" th:value="${order.id}"
+                                th:text="${order.servicePackage.name + ' bought in date ' + order.getDateOfOrder()}"></option>
+                    </select>
+                </p>
+                <input type="submit" name="Finalize payment" value="pay">
+            </fieldset>
+    </form>
+
+</span>
+
+<div>
     <span th:if="${user == null}"> <a href="registration.html">Create a new account</a> <br>
                                     <a href="index.html">Login</a> </span>
 </div>

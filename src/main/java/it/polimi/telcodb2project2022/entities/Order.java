@@ -8,6 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "order", schema = "telco")
+@NamedQuery(name = "Order.findInvalidOrderByUser",
+        query = "SELECT o FROM Order o, User u WHERE u.username=?1 and o.isValid = false ")
 public class Order {
 
     @Id
@@ -142,4 +144,5 @@ public class Order {
     public void setUser(User user) {
         this.user = user;
     }
+
 }
