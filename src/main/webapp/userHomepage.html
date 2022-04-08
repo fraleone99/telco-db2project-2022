@@ -60,7 +60,7 @@
         <p>Optional product available: </p>
         <ul>
             <li th:each="optional:${optionalProducts}">
-                <p th:text="${optional.getName() + ' monthly fee:' + optional.getMonthlyFee()}"></p>
+                <p th:text="${optional.getName() + ' monthly fee: ' + optional.getMonthlyFee()}"></p>
             </li>
         </ul>
     </span>

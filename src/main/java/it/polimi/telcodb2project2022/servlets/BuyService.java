@@ -151,6 +151,7 @@ public class BuyService extends HttpServlet {
         session.setAttribute("duration", duration);
 
         session.setAttribute("orderCreated", true);
+        session.setAttribute("invalidOrder", null);
 
         String confirm = getServletContext().getContextPath() + "/ConfirmOrder";
         response.sendRedirect(confirm);

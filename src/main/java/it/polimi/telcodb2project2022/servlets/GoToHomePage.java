@@ -117,12 +117,12 @@ public class GoToHomePage extends HttpServlet{
             try {
                 chosen = Integer.parseInt(request.getParameter("invalidId"));
                 order = orderService.findById(chosen);
+                request.getSession().setAttribute("invalidOrder", order);
 
             } catch (Exception e) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid package parameters");
                 return;
             }
-            request.getSession().setAttribute("invalidOrder", order);
             String confirm = getServletContext().getContextPath() + "/ConfirmOrder";
             response.sendRedirect(confirm);
         }

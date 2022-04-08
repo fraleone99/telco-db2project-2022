@@ -56,7 +56,7 @@
                 <label>Choose the optional products:</label>
             <ul>
                 <li th:each="product : ${optionalProducts}">
-                    <label th:for="${product.name}" th:text="${product.name}">Optional name</label>
+                    <label th:for="${product.name}" th:text="${product.name + ' ' + product.getMonthlyFee() + ' euro per month'}">Optional name</label>
                     <label>
                         <input type="checkbox" th:id="${product.id}"
                                th:name="optional" th:value="${product.id}"/>

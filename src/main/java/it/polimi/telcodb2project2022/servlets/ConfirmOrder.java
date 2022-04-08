@@ -56,6 +56,7 @@ public class ConfirmOrder extends HttpServlet {
         Order invalidOrder = (Order) request.getSession().getAttribute("invalidOrder");
 
         if(invalidOrder == null) {
+            System.out.println("not invalid order");
             int duration =  Integer.parseInt((String) request.getSession().getAttribute("duration"));
             List<OptionalProduct> selectedOptionals = (List<OptionalProduct>) request.getSession().getAttribute("selectedOptionals");
             float totalCost = (Float) request.getSession().getAttribute("totalCost");
@@ -67,7 +68,8 @@ public class ConfirmOrder extends HttpServlet {
             ctx.setVariable("servicePackage", servicePackage);
         }
         else{
-            ctx.setVariable("duration", Integer.toString(invalidOrder.getDuration()));
+            System.out.println("invalid order " + invalidOrder.getDuration());
+            ctx.setVariable("duration", invalidOrder.getDuration());
             ctx.setVariable("user", user);
             ctx.setVariable("selectedOptionals", invalidOrder.getSelectedOptional());
             ctx.setVariable("totalCost", invalidOrder.getTotalValue());
@@ -78,11 +80,11 @@ public class ConfirmOrder extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println( "Entrato in post");
+        System.out.println("Entrato in post");
 
         Order invalidOrder = (Order) request.getSession().getAttribute("invalidOrder");
 
-        if(invalidOrder == null) {
+        if (invalidOrder == null) {
             Date startSubscription = (Date) request.getSession().getAttribute("startSubscription");
             List<OptionalProduct> selectedOptionals = (List<OptionalProduct>) request.getSession().getAttribute("selectedOptionals");
 
@@ -112,13 +114,13 @@ public class ConfirmOrder extends HttpServlet {
                 orderService.insertOptionals(order.getId(), OptionalIds);
                 userService.setInsolvent(user);
             }
-        }
-        else{
+        } else {
             if (request.getParameter("Buy").equals("Buy"))
                 orderService.setValid(invalidOrder.getId());
         }
-        request.setAttribute("invalidOrder",null);
+        request.setAttribute("invalidOrder", null);
         String confirm = getServletContext().getContextPath() + "/GoToHomePage";
         response.sendRedirect(confirm);
+
     }
 }

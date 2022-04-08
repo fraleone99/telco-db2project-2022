@@ -26,6 +26,8 @@ public class OrderService {
                              List<OptionalProduct> selectedOptionals, ServicePackage servicePackage, User user){
         Order order = new Order();
 
+        order.setDuration(duration);
+
         Date date = new Date();
         order.setDateOfOrder(date);
 
