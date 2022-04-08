@@ -35,4 +35,8 @@ public class ServService {
         em.persist(service);
         return service;
      }
+
+     public List<Service> findByPackageId(int id){
+        return em.find(ServicePackage.class, id).getServices();
+     }
 }
