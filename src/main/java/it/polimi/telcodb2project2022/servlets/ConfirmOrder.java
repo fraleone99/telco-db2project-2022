@@ -5,6 +5,7 @@ import it.polimi.telcodb2project2022.entities.Order;
 import it.polimi.telcodb2project2022.entities.ServicePackage;
 import it.polimi.telcodb2project2022.entities.User;
 import it.polimi.telcodb2project2022.services.OrderService;
+import it.polimi.telcodb2project2022.services.ServiceActivationScheduleService;
 import it.polimi.telcodb2project2022.services.UserService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +35,9 @@ public class ConfirmOrder extends HttpServlet {
 
     @EJB(name = "it.polimi.telcodb2project2022.services/UserService")
     private UserService userService;
+
+    @EJB(name = "it.polimi.telcodb2project2022.services/ServiceActivationScheduleService")
+    private ServiceActivationScheduleService scheduleService;
 
     public ConfirmOrder(){super();}
 
@@ -83,6 +88,8 @@ public class ConfirmOrder extends HttpServlet {
         System.out.println("Entrato in post");
 
         Order invalidOrder = (Order) request.getSession().getAttribute("invalidOrder");
+        User user = (User) request.getSession().getAttribute("user");
+
 
         if (invalidOrder == null) {
             Date startSubscription = (Date) request.getSession().getAttribute("startSubscription");
@@ -96,7 +103,6 @@ public class ConfirmOrder extends HttpServlet {
 
             int duration = Integer.parseInt((String) request.getSession().getAttribute("duration"));
             ServicePackage servicePackage = (ServicePackage) request.getSession().getAttribute("packageSelected");
-            User user = (User) request.getSession().getAttribute("user");
 
 
             ServletContext servletContext = getServletContext();
@@ -108,6 +114,16 @@ public class ConfirmOrder extends HttpServlet {
                 order = orderService.insertOrder(duration, true, startSubscription,
                         selectedOptionals, servicePackage, user);
                 orderService.insertOptionals(order.getId(), OptionalIds);
+
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(startSubscription);
+
+                cal.add(Calendar.MONTH, order.getDuration());
+                Date endDate = cal.getTime();
+
+                scheduleService.insertServiceActivationSchedule(startSubscription, endDate, order.getServicePackage().getServices(),
+                        order.getServicePackage().getOptionalProducts(), order, user);
+
             } else {
                 order = orderService.insertOrder(duration, false, startSubscription,
                         selectedOptionals, servicePackage, user);
@@ -115,8 +131,19 @@ public class ConfirmOrder extends HttpServlet {
                 userService.setInsolvent(user);
             }
         } else {
-            if (request.getParameter("Buy").equals("Buy"))
+            if (request.getParameter("Buy").equals("Buy")) {
                 orderService.setValid(invalidOrder.getId());
+                Date startDate = invalidOrder.getStartDate();
+
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(startDate);
+
+                cal.add(Calendar.MONTH, invalidOrder.getDuration());
+                Date endDate = cal.getTime();
+
+                scheduleService.insertServiceActivationSchedule(startDate, endDate, invalidOrder.getServicePackage().getServices(),
+                        invalidOrder.getServicePackage().getOptionalProducts(),invalidOrder, user);
+            }
         }
         request.setAttribute("invalidOrder", null);
         String confirm = getServletContext().getContextPath() + "/GoToHomePage";

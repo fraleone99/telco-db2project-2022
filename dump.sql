@@ -157,35 +157,6 @@ CREATE TABLE `auditingTable` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-DROP TABLE IF EXISTS `services`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `associatedTo` (
-    `activationScheduleId` int(11) NOT NULL,
-    `serviceId` int(11) NOT NULL,
-    PRIMARY KEY (`activationScheduleId`,`serviceId`),
-    KEY `associatedTo_activationScheduleId_idx` (`activationScheduleId`),
-    KEY `associatedTo_serviceId_idx` (`serviceId`),
-    CONSTRAINT `associatedTo_ScheduleId` FOREIGN KEY (`activationScheduleId`) REFERENCES `serviceActivationSchedule` (`id`),
-    CONSTRAINT `associatedTo_ServiceId` FOREIGN KEY (`serviceId`) REFERENCES `service` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-
-DROP TABLE IF EXISTS `optionals`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `associatedTo` (
-    `activationScheduleId` int(11) NOT NULL,
-    `optionalId` int(11) NOT NULL,
-    PRIMARY KEY (`activationScheduleId`,`optionalId`),
-    KEY `associatedTo_activationScheduleId_idx` (`activationScheduleId`),
-    KEY `associatedTo_optionalId_idx` (`optionalId`),
-    CONSTRAINT `associatedTo_ScheduleId` FOREIGN KEY (`activationScheduleId`) REFERENCES `serviceActivationSchedule` (`id`),
-    CONSTRAINT `associatedTo_OptionalId` FOREIGN KEY (`optionalId`) REFERENCES `optionalProduct` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
 --
 -- Table structure for table `serviceActivationSchedule`
 --
@@ -198,9 +169,46 @@ CREATE TABLE `serviceActivationSchedule` (
   `orderId` int NOT NULL,
   `startDate` DATE NOT NULL,
   `endDate` DATE NOT NULL,
-  PRIMARY KEY (`orderId`,`id`),
+  PRIMARY KEY (`id`),
+  KEY `order_idx` (`orderId`),
   CONSTRAINT `fk_schedule_orderId` FOREIGN KEY (`orderId`) REFERENCES `order` (`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `services`
+--
+
+DROP TABLE IF EXISTS `services`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `services` (
+    `activationScheduleId` int(11) NOT NULL,
+    `serviceId` int(11) NOT NULL,
+    PRIMARY KEY (`activationScheduleId`,`serviceId`),
+    KEY `associatedTo_activationScheduleId_idx` (`activationScheduleId`),
+    KEY `associatedTo_serviceId_idx` (`serviceId`),
+    CONSTRAINT `associatedTo_ScheduleId` FOREIGN KEY (`activationScheduleId`) REFERENCES `serviceActivationSchedule` (`id`),
+    CONSTRAINT `associatedTo_ServiceId` FOREIGN KEY (`serviceId`) REFERENCES `service` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `optionals`
+--
+
+DROP TABLE IF EXISTS `optionals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `optionals` (
+    `activationScheduleId` int(11) NOT NULL,
+    `optionalId` int(11) NOT NULL,
+    PRIMARY KEY (`activationScheduleId`,`optionalId`),
+    KEY `associatedTo_activationScheduleId_idx` (`activationScheduleId`),
+    KEY `associatedTo_optionalId_idx` (`optionalId`),
+    CONSTRAINT `associatedTo_ScheduleId_optionals` FOREIGN KEY (`activationScheduleId`) REFERENCES `serviceActivationSchedule` (`id`),
+    CONSTRAINT `associatedTo_OptionalId_optionals` FOREIGN KEY (`optionalId`) REFERENCES `optionalProduct` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -241,7 +249,7 @@ CREATE TABLE `associatedTo` (
 
 
 --
--- Table structure for table `associatedTo`
+-- Table structure for table `optionalSelected`
 --
 
 DROP TABLE IF EXISTS `optionalSelected`;
