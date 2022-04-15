@@ -30,6 +30,7 @@ CREATE TABLE `user` (
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
   `isInsolvent` boolean NOT NULL,
+  `numberFailedPayment` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`username`),
   UNIQUE KEY `user_id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -38,7 +39,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES	`user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS*/;
-INSERT INTO `user` VALUES(1,'fraleone99@gmail.com','spaceranger','pippo1',false);
+INSERT INTO `user` VALUES(1,'fraleone99@gmail.com','spaceranger','pippo1',false,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS*/;
 UNLOCK TABLES;
 --
@@ -62,6 +63,8 @@ CREATE TABLE `servicePackage` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+
 --
 -- Table structure for table `service`
 --
@@ -81,6 +84,12 @@ CREATE TABLE `service` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES	`service` WRITE;
+/*!40000 ALTER TABLE `service` DISABLE KEYS*/;
+INSERT INTO `service` VALUES(1,'fixedPhone',null,null,null,null,null,null);
+/*!40000 ALTER TABLE `service` ENABLE KEYS*/;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `optionalProduct`
@@ -113,6 +122,18 @@ CREATE TABLE `employee` (
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES	`employee` WRITE;
+/*!40000 ALTER TABLE `employee` DISABLE KEYS*/;
+INSERT INTO `employee` VALUES('franco','franco');
+/*!40000 ALTER TABLE `employee` ENABLE KEYS*/;
+UNLOCK TABLES;
+
+LOCK TABLES	`optionalProduct` WRITE;
+/*!40000 ALTER TABLE `optionalProduct` DISABLE KEYS*/;
+INSERT INTO `optionalProduct` VALUES(1,'TV',5,'franco');
+/*!40000 ALTER TABLE `optionalProduct` ENABLE KEYS*/;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `order`
@@ -147,15 +168,33 @@ DROP TABLE IF EXISTS `auditingTable`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `auditingTable` (
   `userId` int NOT NULL,
-  `username` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
+  `username` varchar(45),
+  `email` varchar(45),
   `lastAmount` float NOT NULL,
   `lastDate` DATETIME NOT NULL,
-  PRIMARY KEY (`userId`,`username`),
+  PRIMARY KEY (`userId`),
   CONSTRAINT `fk_auditing_userId` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE RESTRICT,
   CONSTRAINT `fk_auditing_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+
+-- trigger
+DELIMITER ;;
+CREATE TRIGGER AlertForFailedPayment
+AFTER INSERT on `order`
+FOR EACH ROW
+BEGIN
+	IF (SELECT numberFailedPayment FROM user WHERE id = new.idBuyer) >= 3
+	    AND new.isValid = 0 THEN
+        INSERT INTO auditingTable
+        VALUES (new.idBuyer,null,null,new.totalValue,new.dateOfOrder);
+	END IF;
+END;;
+DELIMITER ;
+
+
+
 
 --
 -- Table structure for table `serviceActivationSchedule`
@@ -247,7 +286,6 @@ CREATE TABLE `associatedTo` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Table structure for table `optionalSelected`
 --
@@ -283,6 +321,8 @@ CREATE TABLE `composedOf` (
   CONSTRAINT `composedOf_packageId` FOREIGN KEY (`packageId`) REFERENCES `servicePackage` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
