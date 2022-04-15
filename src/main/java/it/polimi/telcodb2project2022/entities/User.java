@@ -32,6 +32,13 @@ public class User implements Serializable {
     @NotNull
     private boolean isInsolvent;
 
+    @NotNull
+    private int numberFailedPayment;
+
+    @OneToOne
+    @JoinColumn(name = "lastFailedId")
+    private Order lastFailedOrder;
+
     @ManyToMany
     @JoinTable(name = "buy", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "packageId"))
     private Collection<ServicePackage> servicePackages;
@@ -76,5 +83,17 @@ public class User implements Serializable {
 
     public void setInsolvent(boolean insolvent) {
         isInsolvent = insolvent;
+    }
+
+    public int getNumberFailedPayment() {
+        return numberFailedPayment;
+    }
+
+    public void setNumberFailedPayment(int numberFailedPayment) {
+        this.numberFailedPayment = numberFailedPayment;
+    }
+
+    public void setLastFailedOrder(Order lastFailedOrder) {
+        this.lastFailedOrder = lastFailedOrder;
     }
 }

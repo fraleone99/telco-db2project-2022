@@ -77,7 +77,7 @@ public class CheckLogin extends HttpServlet {
         } else {
             request.getSession().setAttribute("user", user);
 
-            if(request.getSession().getAttribute("orderCreated")!= null)
+            if(request.getSession().getAttribute("orderCreated")!=null)
             {
                 path = getServletContext().getContextPath() + "/ConfirmOrder";
             }

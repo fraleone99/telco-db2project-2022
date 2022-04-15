@@ -1,5 +1,6 @@
 package it.polimi.telcodb2project2022.services;
 
+import it.polimi.telcodb2project2022.entities.Order;
 import it.polimi.telcodb2project2022.entities.User;
 import it.polimi.telcodb2project2022.exceptions.CredentialsException;
 
@@ -61,6 +62,20 @@ public class UserService {
 
     public void setInsolvent(User u){
         u.setInsolvent(true);
+        em.merge(u);
+    }
+
+    public void setLastFailedOrder(User u, Order o){
+        u.setLastFailedOrder(o);
+        em.merge(u);
+    }
+
+    public void increaseFailedPayment(User u){
+        int failed = u.getNumberFailedPayment();
+        u.setNumberFailedPayment(failed + 1);
+        if(failed + 1 >= 3){
+            //alert
+        }
         em.merge(u);
     }
 

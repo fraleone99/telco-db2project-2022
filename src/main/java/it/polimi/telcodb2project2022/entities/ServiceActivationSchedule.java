@@ -18,10 +18,6 @@ public class ServiceActivationSchedule {
     @JoinColumn(name = "orderId")
     private Order order;
 
-    @OneToOne
-    @JoinColumn(name = "userId", referencedColumnName = "id", updatable = false)
-    private User user;
-
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
@@ -48,13 +44,13 @@ public class ServiceActivationSchedule {
         this.order = order;
     }
 
-    public User getUser() {
+    /*public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
+    }*/
 
     public Date getStartDate() {
         return startDate;

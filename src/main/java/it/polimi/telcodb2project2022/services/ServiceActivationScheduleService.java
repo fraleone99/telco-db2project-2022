@@ -17,7 +17,7 @@ public class ServiceActivationScheduleService {
     }
 
     public ServiceActivationSchedule insertServiceActivationSchedule(Date startDate, Date endDate, List<Service> services,
-                                                                     List<OptionalProduct> optionalProducts, Order order, User user){
+                                                                     List<OptionalProduct> optionalProducts, Order order){
         System.out.println("creating service activation schedule!");
         ServiceActivationSchedule serviceActivationSchedule= new ServiceActivationSchedule();
 
@@ -32,7 +32,7 @@ public class ServiceActivationScheduleService {
         serviceActivationSchedule.setOrder(order);
         serviceActivationSchedule.setStartDate(startDate);
         serviceActivationSchedule.setEndDate(endDate);
-        serviceActivationSchedule.setUser(user);
+        //serviceActivationSchedule.setUser(user);
 
         em.persist(serviceActivationSchedule);
 

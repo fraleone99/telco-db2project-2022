@@ -31,15 +31,18 @@ CREATE TABLE `user` (
   `password` varchar(45) NOT NULL,
   `isInsolvent` boolean NOT NULL,
   `numberFailedPayment` int NOT NULL DEFAULT 0,
+  `lastFailedId` int,
   PRIMARY KEY (`username`),
-  UNIQUE KEY `user_id` (`id`)
+  UNIQUE KEY `user_id` (`id`),
+  CONSTRAINT `fk_user_invalidOrder` FOREIGN KEY (`lastFailedId`) REFERENCES `order` (`id`)
+
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
 LOCK TABLES	`user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS*/;
-INSERT INTO `user` VALUES(1,'fraleone99@gmail.com','spaceranger','pippo1',false,0);
+INSERT INTO `user` VALUES(1,'fraleone99@gmail.com','spaceranger','pippo1',false,0,null);
 /*!40000 ALTER TABLE `user` ENABLE KEYS*/;
 UNLOCK TABLES;
 --
@@ -170,28 +173,55 @@ CREATE TABLE `auditingTable` (
   `userId` int NOT NULL,
   `username` varchar(45),
   `email` varchar(45),
-  `lastAmount` float NOT NULL,
-  `lastDate` DATETIME NOT NULL,
+  `lastAmount` float,
+  `lastDate` DATETIME,
   PRIMARY KEY (`userId`),
   CONSTRAINT `fk_auditing_userId` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE RESTRICT,
   CONSTRAINT `fk_auditing_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
 -- trigger
 DELIMITER ;;
-CREATE TRIGGER AlertForFailedPayment
-AFTER INSERT on `order`
-FOR EACH ROW
+CREATE TRIGGER AlertForFailedPaymentUser
+    AFTER UPDATE ON user
+    FOR EACH ROW
 BEGIN
-	IF (SELECT numberFailedPayment FROM user WHERE id = new.idBuyer) >= 3
-	    AND new.isValid = 0 THEN
-        INSERT INTO auditingTable
-        VALUES (new.idBuyer,null,null,new.totalValue,new.dateOfOrder);
-	END IF;
+    DECLARE amount INT;
+    DECLARE lastDateFailed DATETIME;
+    IF !(new.numberFailedPayment <=> old.numberFailedPayment) AND
+       NOT EXISTS (SELECT 1 FROM auditingTable WHERE userId = new.id) AND
+       (new.numberFailedPayment) >= 3 THEN
+        SET amount = (SELECT totalValue FROM `order` WHERE id = new.lastFailedId);
+        SET lastDateFailed = (SELECT dateOfOrder FROM `order` WHERE id = new.lastFailedId);
+        INSERT INTO auditingTable VALUES (new.id,new.username,new.email,amount,lastDateFailed);
+    END IF;
 END;;
 DELIMITER ;
+
+-- trigger
+DELIMITER ;;
+CREATE TRIGGER AlertForFailedPaymentUser_setOrderInfo
+    AFTER UPDATE ON user
+    FOR EACH ROW
+BEGIN
+    IF !(new.lastFailedId <=> old.lastFailedId) AND
+        EXISTS (SELECT 1 FROM auditingTable WHERE userId = new.id) THEN
+
+        UPDATE auditingTable
+        SET lastAmount = (SELECT totalValue FROM `order` where id = new.lastFailedId)
+        WHERE userId=new.id;
+
+        UPDATE auditingTable
+        SET lastDate = (SELECT dateOfOrder FROM `order` where id = new.lastFailedId)
+        WHERE userId=new.id;
+
+    END IF;
+END;;
+DELIMITER ;
+
 
 
 

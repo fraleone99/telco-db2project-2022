@@ -122,11 +122,13 @@ public class ConfirmOrder extends HttpServlet {
                 Date endDate = cal.getTime();
 
                 scheduleService.insertServiceActivationSchedule(startSubscription, endDate, order.getServicePackage().getServices(),
-                        order.getServicePackage().getOptionalProducts(), order, user);
+                        order.getServicePackage().getOptionalProducts(), order);
 
             } else {
                 order = orderService.insertOrder(duration, false, startSubscription,
                         selectedOptionals, servicePackage, user);
+                userService.setLastFailedOrder(user, order);
+                userService.increaseFailedPayment(user);
                 orderService.insertOptionals(order.getId(), OptionalIds);
                 userService.setInsolvent(user);
             }
@@ -142,10 +144,17 @@ public class ConfirmOrder extends HttpServlet {
                 Date endDate = cal.getTime();
 
                 scheduleService.insertServiceActivationSchedule(startDate, endDate, invalidOrder.getServicePackage().getServices(),
-                        invalidOrder.getServicePackage().getOptionalProducts(),invalidOrder, user);
+                        invalidOrder.getServicePackage().getOptionalProducts(),invalidOrder);
+            }
+            else{
+                userService.setLastFailedOrder(user, invalidOrder);
+                userService.increaseFailedPayment(user);
             }
         }
         request.setAttribute("invalidOrder", null);
+        request.getSession().setAttribute("orderCreated", null);
+        System.out.println("set orderCreated to null");
+
         String confirm = getServletContext().getContextPath() + "/GoToHomePage";
         response.sendRedirect(confirm);
 
