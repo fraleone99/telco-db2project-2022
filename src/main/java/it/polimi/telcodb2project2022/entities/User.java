@@ -46,9 +46,6 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;
 
-    //@ManyToOne
-    //private AuditingTable auditingTable;
-
     public String getUsername() {
         return username;
     }
