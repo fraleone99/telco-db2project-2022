@@ -118,20 +118,13 @@ public class BuyService extends HttpServlet {
         String duration = request.getParameter("duration");
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        System.out.println(duration);
-        System.out.println("The package to buy is : " + servicePackage.getId() + "for the duration " + duration);
-        for(OptionalProduct p : optionalProducts){
-            System.out.println("optional: " + p.getName());
-        }
 
         if(optionals != null) {
             for (String optional : optionals) {
-                System.out.println("selected : " + optional);
                 selectedOptional.add(optionalProductService.findById(Integer.parseInt(optional)));
 
             }
         }
-        System.out.println("Start Date: " + startDate);
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();

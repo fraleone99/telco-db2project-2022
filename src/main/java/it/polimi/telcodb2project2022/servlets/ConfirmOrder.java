@@ -61,7 +61,6 @@ public class ConfirmOrder extends HttpServlet {
         Order invalidOrder = (Order) request.getSession().getAttribute("invalidOrder");
 
         if(invalidOrder == null) {
-            System.out.println("not invalid order");
             int duration =  Integer.parseInt((String) request.getSession().getAttribute("duration"));
             List<OptionalProduct> selectedOptionals = (List<OptionalProduct>) request.getSession().getAttribute("selectedOptionals");
             float totalCost = (Float) request.getSession().getAttribute("totalCost");
@@ -73,7 +72,6 @@ public class ConfirmOrder extends HttpServlet {
             ctx.setVariable("servicePackage", servicePackage);
         }
         else{
-            System.out.println("invalid order " + invalidOrder.getDuration());
             ctx.setVariable("duration", invalidOrder.getDuration());
             ctx.setVariable("user", user);
             ctx.setVariable("selectedOptionals", invalidOrder.getSelectedOptional());
@@ -85,7 +83,6 @@ public class ConfirmOrder extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("Entrato in post");
 
         Order invalidOrder = (Order) request.getSession().getAttribute("invalidOrder");
         User user = (User) request.getSession().getAttribute("user");
@@ -153,7 +150,6 @@ public class ConfirmOrder extends HttpServlet {
         }
         request.setAttribute("invalidOrder", null);
         request.getSession().setAttribute("orderCreated", null);
-        System.out.println("set orderCreated to null");
 
         String confirm = getServletContext().getContextPath() + "/GoToHomePage";
         response.sendRedirect(confirm);
