@@ -3,7 +3,6 @@ package it.polimi.telcodb2project2022.entities;
 
 
 import javax.persistence.*;
-import javax.swing.text.html.Option;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import java.util.Set;
 @Entity
 @Table(name = "servicePackage", schema = "telco")
 @NamedQuery(name = "ServicePackage.findAll", query = "SELECT s FROM ServicePackage s")
-
 public class ServicePackage implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -96,6 +94,14 @@ public class ServicePackage implements Serializable {
     public void setEmployee(Employee employee) {
         this.usernameEmployee = employee;
         usernameEmployee.getCreatedServicePackages().add(this);
+    }
+
+    public Employee getUsernameEmployee() {
+        return usernameEmployee;
+    }
+
+    public int getSoldNumber() {
+        return soldNumber;
     }
 
     public void setMonthlyFee12(float monthlyFee12) {
