@@ -35,7 +35,6 @@ CREATE TABLE `user` (
     PRIMARY KEY (`username`),
     UNIQUE KEY `user_id` (`id`),
     CONSTRAINT `fk_user_invalidOrder` FOREIGN KEY (`lastFailedId`) REFERENCES `order` (`id`)
-
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -135,6 +134,8 @@ UNLOCK TABLES;
 LOCK TABLES	`optionalProduct` WRITE;
 /*!40000 ALTER TABLE `optionalProduct` DISABLE KEYS*/;
 INSERT INTO `optionalProduct` VALUES(1,'TV',5,'franco');
+INSERT INTO `optionalProduct` VALUES(2,'bella',3,'franco');
+INSERT INTO `optionalProduct` VALUES(3,'ciao',2,'franco');
 /*!40000 ALTER TABLE `optionalProduct` ENABLE KEYS*/;
 UNLOCK TABLES;
 
@@ -178,7 +179,6 @@ CREATE TABLE `auditingTable` (
     PRIMARY KEY (`userId`),
     CONSTRAINT `fk_auditing_userId` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE RESTRICT,
     CONSTRAINT `fk_auditing_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
-
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -191,11 +191,11 @@ CREATE TRIGGER updateSoldNumber1
 BEGIN
     IF (new.isValid=1) THEN
 
-    UPDATE servicePackage
-    SET soldNumber=soldNumber+1
-    WHERE id=new.idPackage;
+        UPDATE servicePackage
+        SET soldNumber=soldNumber+1
+        WHERE id=new.idPackage;
 
-END IF;
+    END IF;
 END;;
 DELIMITER ;
 
@@ -207,11 +207,11 @@ CREATE TRIGGER updateSoldNumber2
 BEGIN
     IF (new.isValid=1) THEN
 
-    UPDATE servicePackage
-    SET soldNumber=soldNumber+1
-    WHERE id=new.idPackage;
+        UPDATE servicePackage
+        SET soldNumber=soldNumber+1
+        WHERE id=new.idPackage;
 
-END IF;
+    END IF;
 END;;
 DELIMITER ;
 
@@ -229,8 +229,8 @@ BEGIN
        (new.numberFailedPayment) >= 3 THEN
         SET amount = (SELECT totalValue FROM `order` WHERE id = new.lastFailedId);
         SET lastDateFailed = (SELECT dateOfOrder FROM `order` WHERE id = new.lastFailedId);
-    INSERT INTO auditingTable VALUES (new.id,new.username,new.email,amount,lastDateFailed);
-END IF;
+        INSERT INTO auditingTable VALUES (new.id,new.username,new.email,amount,lastDateFailed);
+    END IF;
 END;;
 DELIMITER ;
 
@@ -241,17 +241,17 @@ CREATE TRIGGER AlertForFailedPaymentUser_setOrderInfo
     FOR EACH ROW
 BEGIN
     IF !(new.lastFailedId <=> old.lastFailedId) AND
-        EXISTS (SELECT 1 FROM auditingTable WHERE userId = new.id) THEN
+       EXISTS (SELECT 1 FROM auditingTable WHERE userId = new.id) THEN
 
-    UPDATE auditingTable
-    SET lastAmount = (SELECT totalValue FROM `order` where id = new.lastFailedId)
-    WHERE userId=new.id;
+        UPDATE auditingTable
+        SET lastAmount = (SELECT totalValue FROM `order` where id = new.lastFailedId)
+        WHERE userId=new.id;
 
-    UPDATE auditingTable
-    SET lastDate = (SELECT dateOfOrder FROM `order` where id = new.lastFailedId)
-    WHERE userId=new.id;
+        UPDATE auditingTable
+        SET lastDate = (SELECT dateOfOrder FROM `order` where id = new.lastFailedId)
+        WHERE userId=new.id;
 
-END IF;
+    END IF;
 END;;
 DELIMITER ;
 
@@ -392,6 +392,7 @@ DROP TABLE IF EXISTS `packagePerValidityPeriod`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `packagePerValidityPeriod` (
     `packageId` int(11) NOT NULL,
+    `name` varchar(45) NOT NULL,
     `soldNumber12` int DEFAULT 0,
     `soldNumber24` int DEFAULT 0,
     `soldNumber36` int DEFAULT 0,
@@ -406,23 +407,23 @@ CREATE TRIGGER validityPeriod1
     AFTER INSERT ON `order`
     FOR EACH ROW
 BEGIN
-    IF (new.isValid=1) AND (SELECT soldNumber FROM `servicePackage` WHERE id=new.idPackage)>=2 THEN
-		IF (new.duration=12) THEN
-    UPDATE packagePerValidityPeriod
-    SET soldNumber12 = soldNumber12 + 1
-    WHERE packageId=new.idPackage;
-END IF;
-IF (new.duration=24) THEN
-UPDATE packagePerValidityPeriod
-SET soldNumber24 = soldNumber24 + 1
-WHERE packageId=new.idPackage;
-END IF;
+    IF (new.isValid=1) THEN
+        IF (new.duration=12) THEN
+            UPDATE packagePerValidityPeriod
+            SET soldNumber12 = soldNumber12 + 1
+            WHERE packageId=new.idPackage;
+        END IF;
+        IF (new.duration=24) THEN
+            UPDATE packagePerValidityPeriod
+            SET soldNumber24 = soldNumber24 + 1
+            WHERE packageId=new.idPackage;
+        END IF;
         IF (new.duration=36) THEN
-UPDATE packagePerValidityPeriod
-SET soldNumber36 = soldNumber36 + 1
-WHERE packageId=new.idPackage;
-END IF;
-END IF;
+            UPDATE packagePerValidityPeriod
+            SET soldNumber36 = soldNumber36 + 1
+            WHERE packageId=new.idPackage;
+        END IF;
+    END IF;
 END ;;
 DELIMITER ;
 
@@ -432,23 +433,23 @@ CREATE TRIGGER validityPeriod2
     AFTER UPDATE ON `order`
     FOR EACH ROW
 BEGIN
-    IF (new.isValid=1) AND (SELECT soldNumber FROM `servicePackage` WHERE id=new.idPackage)>=2 THEN
-		IF (new.duration=12) THEN
-    UPDATE packagePerValidityPeriod
-    SET soldNumber12 = soldNumber12 + 1
-    WHERE packageId=new.idPackage;
-END IF;
-IF (new.duration=24) THEN
-UPDATE packagePerValidityPeriod
-SET soldNumber24 = soldNumber24 + 1
-WHERE packageId=new.idPackage;
-END IF;
+    IF (new.isValid=1) THEN
+        IF (new.duration=12) THEN
+            UPDATE packagePerValidityPeriod
+            SET soldNumber12 = soldNumber12 + 1
+            WHERE packageId=new.idPackage;
+        END IF;
+        IF (new.duration=24) THEN
+            UPDATE packagePerValidityPeriod
+            SET soldNumber24 = soldNumber24 + 1
+            WHERE packageId=new.idPackage;
+        END IF;
         IF (new.duration=36) THEN
-UPDATE packagePerValidityPeriod
-SET soldNumber36 = soldNumber36 + 1
-WHERE packageId=new.idPackage;
-END IF;
-END IF;
+            UPDATE packagePerValidityPeriod
+            SET soldNumber36 = soldNumber36 + 1
+            WHERE packageId=new.idPackage;
+        END IF;
+    END IF;
 END ;;
 DELIMITER ;
 
@@ -457,6 +458,7 @@ DROP TABLE IF EXISTS `valueOfSales`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `valueOfSales` (
     `packageId` int(11) NOT NULL,
+    `name` varchar(45) NOT NULL,
     `valueOfSalesWith` float DEFAULT 0,
     `valueOfSalesWithout` float DEFAULT 0,
     PRIMARY KEY (`packageId`),
@@ -470,15 +472,22 @@ CREATE TRIGGER sales1
     AFTER INSERT ON `order`
     FOR EACH ROW
 BEGIN
-    IF (new.isValid=1) AND (SELECT soldNumber FROM `servicePackage` WHERE id=new.idPackage)>=2 THEN
-    UPDATE valueOfSales
-    SET valueOfSalesWith = valueOfSalesWith + new.totalValue
-    WHERE packageId=new.idPackage;
-    UPDATE valueOfSales
-    SET valueOfSalesWithout = valueOfSalesWithout + (new.totalValue - ((SELECT monthlyFee FROM optionalProduct WHERE id =
-                                                                                                                     (SELECT optionalId FROM optionalSelected  WHERE orderId=new.id)) * new.duration))
-    WHERE packageId=new.idPackage;
-END IF;
+    DECLARE saleWithout float;
+    DECLARE durationSel INT;
+    IF (new.isValid=1) THEN
+        SET durationSel = new.duration;
+        CASE
+            WHEN durationSel=12 THEN SET saleWithout=(SELECT monthlyFee12 FROM servicePackage WHERE id=new.idPackage);
+            WHEN durationSel=24 THEN SET saleWithout=(SELECT monthlyFee24 FROM servicePackage WHERE id=new.idPackage);
+            WHEN durationSel=36 THEN SET saleWithout=(SELECT monthlyFee36 FROM servicePackage WHERE id=new.idPackage);
+            END CASE;
+        UPDATE valueOfSales
+        SET valueOfSalesWith = valueOfSalesWith + new.totalValue
+        WHERE packageId=new.idPackage;
+        UPDATE valueOfSales
+        SET valueOFSalesWithout = valueOfSalesWithout + saleWithout*durationSel
+        WHERE packageId=new.idPackage;
+    END IF;
 END ;;
 DELIMITER ;
 
@@ -488,23 +497,32 @@ CREATE TRIGGER sales2
     AFTER UPDATE ON `order`
     FOR EACH ROW
 BEGIN
-    IF (new.isValid=1) AND (SELECT soldNumber FROM `servicePackage` WHERE id=new.idPackage)>=2 THEN
-    UPDATE valueOfSales
-    SET valueOfSalesWith = valueOfSalesWith + new.totalValue
-    WHERE packageId=new.idPackage;
-    UPDATE valueOfSales
-    SET valueOfSalesWithout = valueOfSalesWithout + (new.totalValue - ((SELECT monthlyFee FROM optionalProduct WHERE id =
-                                                                                                                     (SELECT optionalId FROM optionalSelected  WHERE orderId=new.id)) * new.duration))
-    WHERE packageId=new.idPackage;
-END IF;
+    DECLARE saleWithout float;
+    DECLARE durationSel INT;
+    IF (new.isValid=1) THEN
+        SET durationSel = new.duration;
+        CASE
+            WHEN durationSel=12 THEN SET saleWithout=(SELECT monthlyFee12 FROM servicePackage WHERE id=new.idPackage);
+            WHEN durationSel=24 THEN SET saleWithout=(SELECT monthlyFee24 FROM servicePackage WHERE id=new.idPackage);
+            WHEN durationSel=36 THEN SET saleWithout=(SELECT monthlyFee36 FROM servicePackage WHERE id=new.idPackage);
+            END CASE;
+        UPDATE valueOfSales
+        SET valueOfSalesWith = valueOfSalesWith + new.totalValue
+        WHERE packageId=new.idPackage;
+        UPDATE valueOfSales
+        SET valueOFSalesWithout = valueOfSalesWithout + saleWithout*durationSel
+        WHERE packageId=new.idPackage;
+    END IF;
 END ;;
 DELIMITER ;
+
 
 DROP TABLE IF EXISTS `averageOptional`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `averageOptional` (
     `packageId` int(11) NOT NULL,
+    `name` varchar(45) NOT NULL,
     `optionals` int DEFAULT 0,
     `average` float DEFAULT 0,
     PRIMARY KEY (`packageId`),
@@ -515,17 +533,19 @@ CREATE TABLE `averageOptional` (
 -- trigger
 DELIMITER ;;
 CREATE TRIGGER average1
-    AFTER INSERT ON `order`
+    AFTER INSERT ON `optionalSelected`
     FOR EACH ROW
 BEGIN
-    IF (new.isValid=1) AND (SELECT soldNumber FROM `servicePackage` WHERE id=new.idPackage)>=2 THEN
-    UPDATE averageOptional
-    SET optionals = optionals + (SELECT COUNT(*) FROM optionalSelected WHERE orderId=new.id)
-    WHERE packageId = new.idPackage;
-    UPDATE averageOptional
-    SET average = optionals / (SELECT soldNumber FROM servicePackage WHERE id=new.idPackage)
-    WHERE packageId = new.idPackage;
-END IF;
+    DECLARE packageIdSel INT;
+    IF (SELECT isValid FROM `order` WHERE id = new.orderId)=1 THEN
+        SET packageIdSel = (SELECT idPackage FROM `order` WHERE id=new.orderId);
+        UPDATE averageOptional
+        SET optionals = optionals + (SELECT COUNT(*) FROM optionalSelected WHERE orderId=new.orderId AND optionalId=new.optionalId)
+        WHERE packageId = packageIdSel;
+        UPDATE averageOptional
+        SET average = optionals / (SELECT soldNumber FROM servicePackage WHERE id=packageIdSel)
+        WHERE packageId = packageIdSel;
+    END IF;
 END ;;
 DELIMITER ;
 
@@ -535,14 +555,14 @@ CREATE TRIGGER average2
     AFTER UPDATE ON `order`
     FOR EACH ROW
 BEGIN
-    IF (new.isValid=1) AND (SELECT soldNumber FROM `servicePackage` WHERE id=new.idPackage)>=2 THEN
-    UPDATE averageOptional
-    SET optionals = optionals + (SELECT COUNT(*) FROM optionalSelected WHERE orderId=new.id)
-    WHERE packageId = new.idPackage;
-    UPDATE averageOptional
-    SET average = optionals / (SELECT soldNumber FROM servicePackage WHERE id=new.idPackage)
-    WHERE packageId = new.idPackage;
-END IF;
+    IF (new.isValid=1) THEN
+        UPDATE averageOptional
+        SET optionals = optionals + (SELECT COUNT(*) FROM optionalSelected WHERE orderId=new.id)
+        WHERE packageId = new.idPackage;
+        UPDATE averageOptional
+        SET average = optionals / (SELECT soldNumber FROM servicePackage WHERE id=new.idPackage)
+        WHERE packageId = new.idPackage;
+    END IF;
 END ;;
 DELIMITER ;
 
@@ -551,6 +571,7 @@ DROP TABLE IF EXISTS `bestSeller`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bestSeller` (
     `optionalId` int(11) NOT NULL,
+    `name` varchar(45) NOT NULL,
     `soldNumber` int DEFAULT 0,
     `valueOfSales` float DEFAULT 0,
     PRIMARY KEY (`optionalId`),
@@ -560,7 +581,9 @@ CREATE TABLE `bestSeller` (
 
 LOCK TABLES	`bestSeller` WRITE;
 /*!40000 ALTER TABLE `bestSeller` DISABLE KEYS*/;
-INSERT INTO `bestSeller` VALUES(1,0,0);
+INSERT INTO `bestSeller` VALUES(1,'TV',0,0);
+INSERT INTO `bestSeller` VALUES(2,'bella',0,0);
+INSERT INTO `bestSeller` VALUES(3,'ciao',0,0);
 /*!40000 ALTER TABLE `bestSeller` ENABLE KEYS*/;
 UNLOCK TABLES;
 
@@ -571,31 +594,37 @@ CREATE TRIGGER bestSeller1
     FOR EACH ROw
 BEGIN
     IF (SELECT isValid FROM `order` WHERE id = new.orderId)=1 THEN
-    UPDATE bestSeller
-    SET soldNumber = soldNumber + (SELECT COUNT(*) FROM optionalSelected WHERE optionalId = new.optionalId AND orderId = new.orderId)
-    WHERE optionalId=new.optionalId;
-    UPDATE bestSeller
-    SET valueOfSales = soldNumber * (SELECT monthlyFee FROM optionalProduct WHERE id=new.optionalId)
-    WHERE optionalId=new.optionalId;
-END IF;
+        UPDATE bestSeller
+        SET soldNumber = soldNumber + (SELECT COUNT(*) FROM optionalSelected WHERE optionalId = new.optionalId AND orderId = new.orderId)
+        WHERE optionalId=new.optionalId;
+        UPDATE bestSeller
+        SET valueOfSales = soldNumber * (SELECT monthlyFee FROM optionalProduct WHERE id=new.optionalId)
+        WHERE optionalId=new.optionalId;
+    END IF;
 END ;;
 DELIMITER ;
 
 -- trigger
 DELIMITER ;;
 CREATE TRIGGER bestSeller2
-    AFTER UPDATE ON `optionalSelected`
+    AFTER UPDATE ON `order`
     FOR EACH ROW
 BEGIN
-    IF (SELECT isValid FROM `order` WHERE id = new.orderId)=1 THEN
-    UPDATE bestSeller
-    SET soldNumber = (SELECT COUNT(*) FROM optionalSelected WHERE optionalId=new.optionalId AND
-            (SELECT isValid FROM `order` WHERE id=new.optionalId)=1)
-    WHERE optionalId=new.optionalId;
-    UPDATE bestSeller
-    SET valueOfSales = soldNumber * (SELECT monthlyFee FROM optionalProduct WHERE id=new.optionalId)
-    WHERE optionalId=new.optionalId;
-END IF;
+    DECLARE optionalIdSel int;
+    DECLARE finished INTEGER DEFAULT 0;
+    DECLARE cur1 CURSOR FOR (SELECT optionalId FROM optionalSelected WHERE orderId=new.id);
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = 1;
+    IF (new.isValid=1) THEN
+        OPEN cur1;
+        getId: LOOP
+            FETCH cur1 INTO optionalIdSel;
+            IF finished = 1 THEN LEAVE getId; END IF;
+            UPDATE bestSeller
+            SET soldNumber = soldNumber + 1
+            WHERE optionalId = optionalIdSel;
+        END LOOP getId;
+        CLOSE cur1;
+    END IF;
 END ;;
 DELIMITER ;
 
@@ -605,9 +634,9 @@ CREATE TRIGGER newPackage
     AFTER INSERT ON `servicePackage`
     FOR EACH ROW
 BEGIN
-    INSERT INTO packagePerValidityPeriod VALUES (new.id,0,0,0);
-    INSERT INTO valueOfSales VALUES (new.id,0,0);
-    INSERT INTO averageOptional VALUES (new.id,0,0);
+    INSERT INTO packagePerValidityPeriod VALUES (new.id,new.name,0,0,0);
+    INSERT INTO valueOfSales VALUES (new.id,new.name,0,0);
+    INSERT INTO averageOptional VALUES (new.id,new.name,0,0);
 END ;;
 DELIMITER ;
 
@@ -617,11 +646,9 @@ CREATE TRIGGER newOptional
     AFTER INSERT ON `optionalProduct`
     FOR EACH ROW
 BEGIN
-    INSERT INTO bestSeller VALUES (new.id,0,0);
+    INSERT INTO bestSeller VALUES (new.id,new.name,0,0);
 END ;;
 DELIMITER ;
-
-
 
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
