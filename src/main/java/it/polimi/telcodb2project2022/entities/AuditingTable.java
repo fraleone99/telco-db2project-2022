@@ -8,10 +8,6 @@ import java.util.Set;
 @Entity
 @Table(name = "auditingtable", schema = "telco")
 public class AuditingTable {
-
-
-    private int alertId;
-
     @Id
     private int userId;
 

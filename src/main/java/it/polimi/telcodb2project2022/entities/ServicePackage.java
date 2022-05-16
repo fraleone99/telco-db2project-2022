@@ -35,20 +35,17 @@ public class ServicePackage implements Serializable {
     @NotNull
     private float monthlyFee36;
 
-    @ManyToMany(mappedBy = "servicePackages")
-    private Collection<User> users;
-
     @ManyToOne
     @JoinColumn(name = "usernameEmployee", referencedColumnName = "username")
     private Employee usernameEmployee;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(name = "associatedTo",
             joinColumns = @JoinColumn(name = "packageId"),
             inverseJoinColumns = @JoinColumn(name = "optionalId"))
     private List<OptionalProduct> optionalProducts = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(name = "composedOf",
             joinColumns = @JoinColumn(name = "packageId"),
             inverseJoinColumns = @JoinColumn(name = "serviceId"))

@@ -177,8 +177,7 @@ CREATE TABLE `auditingTable` (
     `lastAmount` float,
     `lastDate` DATETIME,
     PRIMARY KEY (`userId`),
-    CONSTRAINT `fk_auditing_userId` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE RESTRICT,
-    CONSTRAINT `fk_auditing_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
+    CONSTRAINT `fk_auditing_userId` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -313,23 +312,6 @@ CREATE TABLE `optionals` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `buy`
---
-
-DROP TABLE IF EXISTS `buy`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `buy` (
-    `userId` int(11) NOT NULL,
-    `packageId` int(11) NOT NULL,
-    PRIMARY KEY (`userId`,`packageId`),
-    KEY `buy_userId_idx` (`userId`),
-    KEY `buy_packageId_idx` (`packageId`),
-    CONSTRAINT `buy_userId` FOREIGN KEY (`userId`) REFERENCES `user` (`id`),
-    CONSTRAINT `buy_packageId` FOREIGN KEY (`packageId`) REFERENCES `servicePackage` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `associatedTo`
@@ -502,9 +484,12 @@ BEGIN
     IF (new.isValid=1) THEN
         SET durationSel = new.duration;
         CASE
-            WHEN durationSel=12 THEN SET saleWithout=(SELECT monthlyFee12 FROM servicePackage WHERE id=new.idPackage);
-            WHEN durationSel=24 THEN SET saleWithout=(SELECT monthlyFee24 FROM servicePackage WHERE id=new.idPackage);
-            WHEN durationSel=36 THEN SET saleWithout=(SELECT monthlyFee36 FROM servicePackage WHERE id=new.idPackage);
+            WHEN durationSel=12 THEN SET
+                saleWithout=(SELECT monthlyFee12 FROM servicePackage WHERE id=new.idPackage);
+            WHEN durationSel=24 THEN SET
+                saleWithout=(SELECT monthlyFee24 FROM servicePackage WHERE id=new.idPackage);
+            WHEN durationSel=36 THEN SET
+                saleWithout=(SELECT monthlyFee36 FROM servicePackage WHERE id=new.idPackage);
             END CASE;
         UPDATE valueOfSales
         SET valueOfSalesWith = valueOfSalesWith + new.totalValue
@@ -590,6 +575,7 @@ UNLOCK TABLES;
 -- trigger
 DELIMITER ;;
 CREATE TRIGGER bestSeller1
+
     AFTER INSERT ON `optionalSelected`
     FOR EACH ROw
 BEGIN

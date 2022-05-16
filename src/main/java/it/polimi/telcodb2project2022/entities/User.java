@@ -39,13 +39,6 @@ public class User implements Serializable {
     @JoinColumn(name = "lastFailedId")
     private Order lastFailedOrder;
 
-    @ManyToMany
-    @JoinTable(name = "buy", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "packageId"))
-    private Collection<ServicePackage> servicePackages;
-
-    @OneToMany(mappedBy = "user")
-    private Set<Order> orders;
-
     public String getUsername() {
         return username;
     }
@@ -60,10 +53,6 @@ public class User implements Serializable {
 
     public boolean isInsolvent() {
         return isInsolvent;
-    }
-
-    public Collection<ServicePackage> getServicePackages() {
-        return servicePackages;
     }
 
     public void setUsername(String username) {
