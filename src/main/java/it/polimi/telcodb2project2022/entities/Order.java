@@ -30,17 +30,17 @@ public class Order {
     @NotNull
     private int duration;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "optionalSelected",
             joinColumns = @JoinColumn(name = "orderId"),
             inverseJoinColumns = @JoinColumn(name = "optionalId"))
     private List<OptionalProduct> selectedOptional = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) //eager because we need to fetch also the services contained in the SP
     @JoinColumn(name = "idPackage", referencedColumnName = "id", updatable = false)
     private ServicePackage servicePackage;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "idBuyer", referencedColumnName = "id", updatable = false)
     private User user;
 

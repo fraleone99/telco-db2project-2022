@@ -24,7 +24,7 @@ public class ServiceActivationSchedule {
     @Temporal(TemporalType.DATE)
     private Date endDate;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "services",
             joinColumns = @JoinColumn(name = "activationScheduleId"),
             inverseJoinColumns = @JoinColumn(name = "serviceId"))

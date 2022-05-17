@@ -18,7 +18,7 @@ public class Employee implements Serializable {
     @OneToMany(mappedBy = "usernameEmployee")
     private Set<ServicePackage> createdServicePackages;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
     private Set<OptionalProduct> optionalProducts;
 
     public void setUsername(String username) {

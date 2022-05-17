@@ -1,9 +1,6 @@
 package it.polimi.telcodb2project2022.servlets;
 
-import it.polimi.telcodb2project2022.entities.OptionalProduct;
-import it.polimi.telcodb2project2022.entities.Order;
-import it.polimi.telcodb2project2022.entities.ServicePackage;
-import it.polimi.telcodb2project2022.entities.User;
+import it.polimi.telcodb2project2022.entities.*;
 import it.polimi.telcodb2project2022.services.OrderService;
 import it.polimi.telcodb2project2022.services.ServiceActivationScheduleService;
 import it.polimi.telcodb2project2022.services.UserService;
@@ -65,11 +62,14 @@ public class ConfirmOrder extends HttpServlet {
             List<OptionalProduct> selectedOptionals = (List<OptionalProduct>) request.getSession().getAttribute("selectedOptionals");
             float totalCost = (Float) request.getSession().getAttribute("totalCost");
             ServicePackage servicePackage = (ServicePackage) request.getSession().getAttribute("packageSelected");
+            List<Service> services = servicePackage.getServices();
+
             ctx.setVariable("duration", duration);
             ctx.setVariable("user", user);
             ctx.setVariable("selectedOptionals", selectedOptionals);
             ctx.setVariable("totalCost", totalCost);
             ctx.setVariable("servicePackage", servicePackage);
+            ctx.setVariable("services", services);
         }
         else{
             ctx.setVariable("duration", invalidOrder.getDuration());
@@ -77,6 +77,7 @@ public class ConfirmOrder extends HttpServlet {
             ctx.setVariable("selectedOptionals", invalidOrder.getSelectedOptional());
             ctx.setVariable("totalCost", invalidOrder.getTotalValue());
             ctx.setVariable("servicePackage", invalidOrder.getServicePackage());
+            ctx.setVariable("services", invalidOrder.getServicePackage().getServices());
         }
         templateEngine.process(path, ctx, response.getWriter());
     }

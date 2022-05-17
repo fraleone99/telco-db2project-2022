@@ -13,7 +13,22 @@
     <h1>Confirm your order</h1>
         <form action="#" th:action="@{/ConfirmOrder}" method="POST">
             <p th:text="${'The selected package is: ' + servicePackage.name + ' for the duration of ' + duration + ' months'}"></p>
+            <p>Services in the package: </p>
+            <ul>
+                <li th:each="service:${services}">
+                    <div th:switch="${service.getType()}">
+                        <p th:case="'fixedPhone'" th:text="${'FIXED PHONE'}"></p>
+                        <p th:case="'mobilePhone'" th:text="${ 'Type: ' + service.getType()
+                    + ', minutes number: ' + service.getMinutesNumber() + ', minutes fee: ' + service.getMinutesFee()
+                    + ', sms number: ' + service.getSmsNumber() + ', sms fee: ' + service.getSmsFee() }"></p>
+                        <p th:case="'fixedInternet'" th:text="${ 'Type: ' + service.getType()  + ', GigaBytes number: ' + service.getGigabyteNumber() + ' Gigabytes fee: ' +service.getGigabyteFee() }"></p>
+                        <p th:case="'mobileInternet'" th:text="${ 'Type: ' + service.getType()  + ', GigaBytes number: ' + service.getGigabyteNumber() + ' Gigabytes fee: ' +service.getGigabyteFee() }"></p>
+                    </div>
+                </li>
+            </ul>
+
             <span th:if = "${selectedOptionals != null}">
+
                 <p>Optional product selected: </p>
                 <ul>
                     <li th:each="optional:${selectedOptionals}">

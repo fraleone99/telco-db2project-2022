@@ -25,10 +25,10 @@ public class OptionalProduct implements Serializable {
     @ManyToMany(mappedBy = "optionalProducts")
     private List<ServicePackage> servicePackages = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "selectedOptional")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "selectedOptional")
     private List<Order> orders = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "usernameEmployee", referencedColumnName = "username", updatable = false)
     private Employee employee;
 

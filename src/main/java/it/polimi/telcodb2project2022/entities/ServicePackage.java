@@ -35,23 +35,23 @@ public class ServicePackage implements Serializable {
     @NotNull
     private float monthlyFee36;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "usernameEmployee", referencedColumnName = "username")
     private Employee usernameEmployee;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "associatedTo",
             joinColumns = @JoinColumn(name = "packageId"),
             inverseJoinColumns = @JoinColumn(name = "optionalId"))
     private List<OptionalProduct> optionalProducts = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "composedOf",
             joinColumns = @JoinColumn(name = "packageId"),
             inverseJoinColumns = @JoinColumn(name = "serviceId"))
     private List<Service> services;
 
-    @OneToMany(mappedBy = "servicePackage")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "servicePackage")
     private Set<Order> orders;
 
     public float getMonthlyFee12() {
