@@ -81,6 +81,36 @@
         </ul>
     </fieldset>
 
+    <fieldset>
+        LIST OF INSOLVENT USERS:
+        <ul>
+            <li th:each="user : ${insolvent}">
+                <label th:for="${user.getId()}" th:text="${user.getUsername()}">
+                </label>
+            </li>
+        </ul>
+    </fieldset>
+
+    <fieldset>
+        LIST OF SUSPENDED ORDERS:
+        <ul>
+            <li th:each="order : ${suspended}">
+                <label th:for="${order.getId()}" th:text="${order.servicePackage.name + ' bought in date ' + order.getDateOfOrder()}">
+                </label>
+            </li>
+        </ul>
+    </fieldset>
+
+    <fieldset>
+        LIST OF ALERTS (USERS WHO HAVE FAILED MORE THAN 3 ORDERS):
+        <ul>
+            <li th:each="user : ${alerts}">
+                <label th:for="${user.getUserId()}" th:text="${user.getUsername()}">
+                </label>
+            </li>
+        </ul>
+    </fieldset>
+
 </form>
 
 <a href="GoToEmployeeHomePage"> <input type="submit" value="Back To HomePage"> </a>

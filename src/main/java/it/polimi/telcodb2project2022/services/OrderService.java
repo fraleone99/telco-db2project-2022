@@ -4,6 +4,7 @@ import it.polimi.telcodb2project2022.entities.OptionalProduct;
 import it.polimi.telcodb2project2022.entities.Order;
 import it.polimi.telcodb2project2022.entities.ServicePackage;
 import it.polimi.telcodb2project2022.entities.User;
+import it.polimi.telcodb2project2022.entities.materializedViewTable.AuditingTable;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -87,5 +88,14 @@ public class OrderService {
         return em.createNamedQuery("Order.findInvalidOrderByUser", Order.class)
                 .setParameter(1, username)
                 .getResultList();
+    }
+
+    public List<Order> getSuspendedOrders() {
+        List<Order> orders = null;
+        orders = em.createNamedQuery("Order.findSuspendedOrder", Order.class).getResultList();
+        for(Order o : orders) {
+            em.refresh(o);
+        }
+        return orders;
     }
 }

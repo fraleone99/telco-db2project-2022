@@ -2,6 +2,8 @@ package it.polimi.telcodb2project2022.services;
 
 import it.polimi.telcodb2project2022.entities.Order;
 import it.polimi.telcodb2project2022.entities.User;
+import it.polimi.telcodb2project2022.entities.materializedViewTable.AuditingTable;
+import it.polimi.telcodb2project2022.entities.materializedViewTable.ValueOfSales;
 import it.polimi.telcodb2project2022.exceptions.CredentialsException;
 
 
@@ -77,6 +79,24 @@ public class UserService {
             //alert
         }
         em.merge(u);
+    }
+
+    public List<User> getInsolventUsers() {
+        List<User> users = null;
+        users = em.createNamedQuery("User.insolvent", User.class).getResultList();
+        for(User u : users) {
+            em.refresh(u);
+        }
+        return users;
+    }
+
+    public List<AuditingTable> getAlerts() {
+        List<AuditingTable> auditingTables = null;
+        auditingTables = em.createNamedQuery("AuditingTable.find", AuditingTable.class).getResultList();
+        for(AuditingTable a : auditingTables) {
+            em.refresh(a);
+        }
+        return auditingTables;
     }
 
 }

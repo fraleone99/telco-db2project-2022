@@ -12,6 +12,8 @@ import java.util.Set;
         query = "SELECT r FROM User r  WHERE r.username = ?1 and r.password = ?2")
 @NamedQuery(name = "User.findByName",
         query = "SELECT u FROM User u WHERE u.username=?1")
+@NamedQuery(name = "User.insolvent",
+        query = "SELECT u FROM User u WHERE u.isInsolvent=true")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -41,6 +43,10 @@ public class User implements Serializable {
 
     public String getUsername() {
         return username;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getEmail() {

@@ -1,14 +1,11 @@
 package it.polimi.telcodb2project2022.servlets;
 
 import it.polimi.telcodb2project2022.entities.Employee;
+import it.polimi.telcodb2project2022.entities.Order;
 import it.polimi.telcodb2project2022.entities.ServicePackage;
-import it.polimi.telcodb2project2022.entities.materializedViewTable.AverageOptional;
-import it.polimi.telcodb2project2022.entities.materializedViewTable.BestSeller;
-import it.polimi.telcodb2project2022.entities.materializedViewTable.PackagePerValidityPeriod;
-import it.polimi.telcodb2project2022.entities.materializedViewTable.ValueOfSales;
-import it.polimi.telcodb2project2022.services.EmployeeService;
-import it.polimi.telcodb2project2022.services.ServService;
-import it.polimi.telcodb2project2022.services.ServicePackageService;
+import it.polimi.telcodb2project2022.entities.User;
+import it.polimi.telcodb2project2022.entities.materializedViewTable.*;
+import it.polimi.telcodb2project2022.services.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -34,6 +31,12 @@ public class SalesReportPage extends HttpServlet {
 
     @EJB(name = "it.polimi.telcodb2project2022.services/ServicePackageService")
     private ServicePackageService servicePackageService;
+
+    @EJB(name = "it.polimi.telcodb2project2022.services/User")
+    private UserService userService;
+
+    @EJB(name = "it.polimi.telcodb2project2022.services/Order")
+    private OrderService orderService;
 
     public SalesReportPage() {
         super();
@@ -66,6 +69,9 @@ public class SalesReportPage extends HttpServlet {
         List<AverageOptional> averageOptionals = servicePackageService.getAllAverageOptional();
         BestSeller bestSoldNumber = servicePackageService.getBestSoldNumber();
         BestSeller bestValue = servicePackageService.getBestValue();
+        List<User> insolventUsers = userService.getInsolventUsers();
+        List<AuditingTable> alerts = userService.getAlerts();
+        List<Order> orders = orderService.getSuspendedOrders();
 
         ctx.setVariable("packages", servicePackages);
         ctx.setVariable("packagePerValidityPeriod", packagePerValidityPeriods);
@@ -73,12 +79,14 @@ public class SalesReportPage extends HttpServlet {
         ctx.setVariable("averageOptionals", averageOptionals);
         ctx.setVariable("bestSoldNumber", bestSoldNumber);
         ctx.setVariable("bestValue", bestValue);
+        ctx.setVariable("insolvent", insolventUsers);
+        ctx.setVariable("alerts", alerts);
+        ctx.setVariable("suspended", orders);
 
         templateEngine.process(path, ctx, response.getWriter());
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
     }
 }
