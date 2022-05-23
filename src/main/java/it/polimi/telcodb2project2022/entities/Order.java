@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "order", schema = "telco")
 @NamedQuery(name = "Order.findInvalidOrderByUser",
-        query = "SELECT o FROM Order o, User u WHERE u.username=?1 and o.isValid = false ")
+        query = "SELECT o FROM Order o WHERE o.user.id=?1 and o.isValid = false ")
 @NamedQuery(name = "Order.findSuspendedOrder",
         query = "SELECT o FROM Order o WHERE o.isValid=false")
 public class Order {

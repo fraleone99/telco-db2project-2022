@@ -38,6 +38,11 @@ public class CheckLogin extends HttpServlet {
         templateResolver.setSuffix(".html");
     }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getSession().setAttribute("user", null);
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String usrn = null;

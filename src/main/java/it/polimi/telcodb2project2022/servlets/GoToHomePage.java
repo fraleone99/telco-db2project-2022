@@ -79,9 +79,6 @@ public class GoToHomePage extends HttpServlet{
         String path = "/userHomepage.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        String username = (String) request.getSession().getAttribute("userId");
-        if(username != null)
-            u = uService.findById(username);
         if(servicePackage != null) {
             ctx.setVariable("packageSelected", servicePackage);
             //services = servService.findByPackageId(servicePackage.getId());
@@ -95,7 +92,7 @@ public class GoToHomePage extends HttpServlet{
 
 
         if (u != null) {
-            List<Order> invalidOrder = orderService.getInvalidOrderByUser(u.getUsername());
+            List<Order> invalidOrder = orderService.getInvalidOrderByUser(u.getId());
             if(!invalidOrder.isEmpty())
                 ctx.setVariable("invalidOrder", invalidOrder);
         }
@@ -114,7 +111,6 @@ public class GoToHomePage extends HttpServlet{
         int chosen;
         if (request.getParameterMap().containsKey("invalidId") && request.getParameter("invalidId") != ""
                 && !request.getParameter("invalidId").isEmpty()) {
-            System.out.println("Andiamo a pagare");
             Order order;
             try {
                 chosen = Integer.parseInt(request.getParameter("invalidId"));

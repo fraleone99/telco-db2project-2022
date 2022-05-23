@@ -72,7 +72,7 @@ public class OrderService {
     public void setValid(int id){
         Order order = findById(id);
         order.setValid(true);
-        if(getInvalidOrderByUser(order.getUser().getUsername()).isEmpty()){
+        if(getInvalidOrderByUser(order.getUser().getId()).isEmpty()){
             User user = em.find(User.class,order.getUser().getUsername());
             user.setInsolvent(false);
             em.persist(user);
@@ -84,9 +84,9 @@ public class OrderService {
         return em.find(Order.class, id);
     }
 
-    public List<Order> getInvalidOrderByUser(String username){
+    public List<Order> getInvalidOrderByUser(int id){
         return em.createNamedQuery("Order.findInvalidOrderByUser", Order.class)
-                .setParameter(1, username)
+                .setParameter(1, id)
                 .getResultList();
     }
 
