@@ -73,6 +73,9 @@ public class SalesReportPage extends HttpServlet {
         List<AuditingTable> alerts = userService.getAlerts();
         List<Order> orders = orderService.getSuspendedOrders();
 
+        System.out.println(bestSoldNumber.getName());
+        System.out.println(bestValue.getName());
+
         ctx.setVariable("packages", servicePackages);
         ctx.setVariable("packagePerValidityPeriod", packagePerValidityPeriods);
         ctx.setVariable("valueOfSales", valueOfSales);

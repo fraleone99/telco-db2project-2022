@@ -66,18 +66,22 @@
     <fieldset>
         BEST SELLER OPTIONAL PRODUCT:
         <ul>
-            <label th:text="${'Optional product name: ' + bestSoldNumber.getName() +
-            ', sold number: ' + bestSoldNumber.getSoldNumber()}">
-            </label>
+            <li th:each="package : ${bestSoldNumber}">
+                <label th:text="${'Optional product name: ' + bestSoldNumber.getName() +
+                ', sold number: ' + bestSoldNumber.getSoldNumber()}">
+                </label>
+            </li>
         </ul>
     </fieldset>
 
     <fieldset>
         OPTIONAL PRODUCT WITH GREATEST VALUE OF SALES:
         <ul>
-            <label th:text="${'Optional product name: ' + bestValue.getName() +
-            ', sold number: ' + bestValue.getValueOfSales()}">
-            </label>
+            <li th:each="package : ${bestValue}">
+                <label th:text="${'Optional product name: ' + bestValue.getName() +
+                ', sold number: ' + bestValue.getValueOfSales()}">
+                </label>
+            </li>
         </ul>
     </fieldset>
 

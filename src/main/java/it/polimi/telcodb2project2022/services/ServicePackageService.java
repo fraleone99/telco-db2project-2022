@@ -62,7 +62,10 @@ public class ServicePackageService {
         for(BestSeller b : bestSoldNumber) {
             em.refresh(b);
         }
-        return bestSoldNumber.get(0);
+        if(bestSoldNumber.size()>=1)
+            return bestSoldNumber.get(0);
+        else
+            return null;
     }
 
     public BestSeller getBestValue() {
@@ -71,7 +74,10 @@ public class ServicePackageService {
         for(BestSeller b : bestValue) {
             em.refresh(b);
         }
-        return bestValue.get(0);
+        if(bestValue.size()>=1)
+            return bestValue.get(0);
+        else
+            return null;
     }
 
     public ServicePackage insertServicePackage(String name, float fee12, float fee24, float fee36, Employee employee) {
