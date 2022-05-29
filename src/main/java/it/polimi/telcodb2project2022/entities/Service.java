@@ -9,8 +9,6 @@ import java.util.List;
 @Table(name = "service", schema = "telco")
 @NamedQuery(name = "Service.getServicesByType", query = "SELECT r FROM Service r  WHERE r.type = ?1")
 public class Service {
-    //If there are problem try to specify the discriminator column
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

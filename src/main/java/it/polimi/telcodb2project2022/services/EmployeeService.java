@@ -36,15 +36,6 @@ public class EmployeeService {
 
     }
 
-    public Employee insertEmployee(String username, String password) throws PersistenceException, IllegalArgumentException{
-        Employee employee = new Employee();
-        employee.setPassword(password);
-        employee.setUsername(username);
-
-        em.persist(employee);
-        return employee;
-    }
-
     public Employee findById(String username) {
         return (em.find(Employee.class, username));
     }

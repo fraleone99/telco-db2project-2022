@@ -44,14 +44,6 @@ public class ServiceActivationSchedule {
         this.order = order;
     }
 
-    /*public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }*/
-
     public Date getStartDate() {
         return startDate;
     }

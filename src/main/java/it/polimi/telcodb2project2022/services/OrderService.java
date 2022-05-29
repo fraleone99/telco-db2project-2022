@@ -75,9 +75,9 @@ public class OrderService {
         if(getInvalidOrderByUser(order.getUser().getId()).isEmpty()){
             User user = em.find(User.class,order.getUser().getUsername());
             user.setInsolvent(false);
-            em.persist(user);
+            em.merge(user);
         }
-        em.persist(order);
+        em.merge(order);
     }
 
     public Order findById(int id) {

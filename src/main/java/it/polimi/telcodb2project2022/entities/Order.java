@@ -46,9 +46,6 @@ public class Order {
     @JoinColumn(name = "idBuyer", referencedColumnName = "id", updatable = false)
     private User user;
 
-    //@ManyToOne
-    //private ServiceActivationSchedule serviceActivationSchedule;
-
     public Order(){};
 
     public Order(Date dateOfOrder, Date startDate, int duration, List<OptionalProduct> selectedOptional, ServicePackage servicePackage, User user) {

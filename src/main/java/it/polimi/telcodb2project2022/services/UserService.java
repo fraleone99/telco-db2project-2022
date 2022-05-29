@@ -75,9 +75,7 @@ public class UserService {
     public void increaseFailedPayment(User u){
         int failed = u.getNumberFailedPayment();
         u.setNumberFailedPayment(failed + 1);
-        if(failed + 1 >= 3){
-            //alert
-        }
+
         em.merge(u);
     }
 
