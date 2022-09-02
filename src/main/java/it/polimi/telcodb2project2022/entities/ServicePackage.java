@@ -39,13 +39,13 @@ public class ServicePackage implements Serializable {
     @JoinColumn(name = "usernameEmployee", referencedColumnName = "username")
     private Employee usernameEmployee;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "associatedTo",
             joinColumns = @JoinColumn(name = "packageId"),
             inverseJoinColumns = @JoinColumn(name = "optionalId"))
     private List<OptionalProduct> optionalProducts = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "composedOf",
             joinColumns = @JoinColumn(name = "packageId"),
             inverseJoinColumns = @JoinColumn(name = "serviceId"))
